@@ -1,28 +1,31 @@
 import { ArrowRight } from 'lucide-react'
 import { useLoaderData } from 'react-router'
+import { CtaSection } from '@/components/layout/cta-section'
 import { ButtonLink } from '@/components/ui/button-link'
 import { Container } from '@/components/ui/container'
 import { PageMeta } from '@/components/ui/page-meta'
-import { RemoteImage } from '@/components/ui/remote-image'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { StatGrid } from '@/components/ui/stat-grid'
-import { CollectionCard } from '@/features/collections'
 import { FeatureGrid } from '@/features/company'
-import { CategorySplit, CtaSection, HeroSection } from '@/features/home'
+import { CategorySplit, FeaturedStrip, HeroSection } from '@/features/home'
+import { ProductionStory } from '@/features/production'
 import { useI18n } from '@/i18n'
+import { useScrollTriggerSync } from '@/lib/motion/use-scroll-trigger-sync'
 import type { homeLoader } from './home-loader'
 
 export function HomePage() {
-  const { featured, company } = useLoaderData<typeof homeLoader>()
+  const { featured, company, steps } = useLoaderData<typeof homeLoader>()
   const { t, path } = useI18n()
   const { home } = t
+  useScrollTriggerSync()
 
   return (
     <>
       <PageMeta />
       <HeroSection image={company.images.hero} />
 
-      <section className="py-16 sm:py-20">
+      {/* Hero pin'i sırasında rulo kapanırken rakamlar alttan yükselir (yalnızca hareket izni varken) */}
+      <section className="relative z-20 py-16 motion-safe:-mt-[45dvh] sm:py-20">
         <Container>
           <StatGrid items={company.stats} />
         </Container>
@@ -34,52 +37,38 @@ export function HomePage() {
         </Container>
       </section>
 
-      <section className="pb-20 sm:pb-28">
-        <Container>
+      <FeaturedStrip collections={featured} />
+
+      <section className="border-y border-line bg-surface py-20 sm:py-28 lg:py-0">
+        <Container className="lg:pt-24">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeading
-              eyebrow={home.featured.eyebrow}
-              title={home.featured.title}
-              description={home.featured.description}
+              eyebrow={home.story.eyebrow}
+              title={home.story.title}
+              titleAccent={home.story.titleAccent}
+              description={home.story.text}
             />
             <ButtonLink
-              to={path('collections')}
+              to={path('production')}
               variant="secondary"
               className="self-start sm:self-auto"
             >
-              {home.featured.cta} <ArrowRight className="size-4" aria-hidden="true" />
-            </ButtonLink>
-          </div>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((collection) => (
-              <CollectionCard key={collection.slug} collection={collection} />
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      <section className="border-y border-line bg-surface py-20 sm:py-28">
-        <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          <div className="aspect-4/3 overflow-hidden rounded-3xl border border-line">
-            <RemoteImage
-              src={company.images.craft}
-              alt={home.craft.imageAlt}
-              className="size-full object-cover"
-            />
-          </div>
-          <div>
-            <SectionHeading eyebrow={home.craft.eyebrow} title={home.craft.title} />
-            <p className="mt-6 text-lg leading-relaxed text-muted">{home.craft.text}</p>
-            <ButtonLink to={path('production')} variant="secondary" className="mt-10">
-              {home.craft.cta} <ArrowRight className="size-4" aria-hidden="true" />
+              {home.story.cta} <ArrowRight className="size-4" aria-hidden="true" />
             </ButtonLink>
           </div>
         </Container>
+        <div className="mt-12 lg:mt-0">
+          <ProductionStory steps={steps} />
+        </div>
       </section>
 
       <section className="py-20 sm:py-28">
         <Container>
-          <SectionHeading eyebrow={home.values.eyebrow} title={home.values.title} />
+          <SectionHeading
+            eyebrow={home.values.eyebrow}
+            title={home.values.title}
+            titleAccent={home.values.titleAccent}
+          />
           <FeatureGrid items={company.values} numbered className="mt-12" />
         </Container>
       </section>

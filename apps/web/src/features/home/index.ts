@@ -1,3 +1,3 @@
 export { CategorySplit } from './components/category-split'
-export { CtaSection } from './components/cta-section'
+export { FeaturedStrip } from './components/featured-strip'
 export { HeroSection } from './components/hero-section'
