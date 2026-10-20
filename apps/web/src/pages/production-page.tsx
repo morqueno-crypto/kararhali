@@ -5,7 +5,7 @@ import { PageMeta } from '@/components/ui/page-meta'
 import { RemoteImage } from '@/components/ui/remote-image'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { FeatureGrid } from '@/features/company'
-import { CtaSection } from '@/features/home'
+import { CtaSection } from '@/components/layout/cta-section'
 import { useI18n } from '@/i18n'
 import type { productionLoader } from './production-loader'
 
@@ -25,6 +25,7 @@ export function ProductionPage() {
       <PageHero
         eyebrow={production.eyebrow}
         title={production.title}
+        titleAccent={production.titleAccent}
         description={production.description}
         image={{ src: images.craft, alt: production.imageAlt }}
       />

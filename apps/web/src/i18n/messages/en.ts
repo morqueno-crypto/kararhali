@@ -25,6 +25,10 @@ export const en: Messages = {
     homeLink: (name) => `${name} home`,
     language: 'Language',
     backHome: 'Back to home',
+    skipIntro: 'Skip intro',
+    explore: 'Explore',
+    zoom: 'Enlarge image',
+    close: 'Close',
   },
   footer: {
     pages: 'Pages',
@@ -42,6 +46,7 @@ export const en: Messages = {
     hero: {
       eyebrow: 'Gaziantep · Since 1966',
       title: 'Decide with confidence.',
+      titleAccent: 'confidence.',
       text: 'The right carpet completely changes the feel of a home. With our modern, elegant and grand collections, we make a carpet for every space.',
       primary: 'Explore collections',
       secondary: 'Our story',
@@ -50,6 +55,7 @@ export const en: Messages = {
     featured: {
       eyebrow: 'Featured',
       title: 'This season’s favourite collections',
+      titleAccent: 'favourite',
       description: 'The most popular designs from our carpet and roll-cut series.',
       cta: 'All collections',
     },
@@ -60,16 +66,18 @@ export const en: Messages = {
       rollsText: 'From hallways to kitchens, cut to the length you need for every room.',
       cta: 'Browse',
     },
-    craft: {
-      eyebrow: 'Production',
-      title: 'From yarn to carpet, under one roof',
+    story: {
+      eyebrow: 'Production story',
+      title: 'From yarn to carpet, under one roof.',
+      titleAccent: 'carpet',
       text: 'Original patterns created by our design team are woven knot by knot on state-of-the-art looms and quality-checked at every stage.',
       cta: 'Our production process',
-      imageAlt: 'Yarn on a spool',
+      step: (current, total) => `Step ${current} / ${total}`,
     },
     values: {
       eyebrow: 'Why Karar Halı',
       title: 'Sixty years of know-how, today’s design',
+      titleAccent: 'Sixty years',
     },
   },
   cta: {
@@ -81,6 +89,7 @@ export const en: Messages = {
     metaDescription: 'Karar Halı since 1966: our story, business plan and vision.',
     eyebrow: 'About us',
     title: 'Since 1966, an established name in home textiles.',
+    titleAccent: '1966',
     description:
       'In Gaziantep, we produce carpets in original colours and patterns using the latest technology and the finest materials.',
     storyEyebrow: 'Our story',
@@ -105,6 +114,7 @@ export const en: Messages = {
       'Explore Karar Halı carpet and roll-cut collections with their models and sizes.',
     eyebrow: 'Collections',
     title: 'A Karar for every space',
+    titleAccent: 'every space',
     description:
       'Browse our collections in two main groups, carpets and roll-cut, and explore the models and colour options of each.',
     filterLabel: 'Filter by category',
@@ -141,11 +151,13 @@ export const en: Messages = {
     related: 'Other patterns in this collection',
     cta: 'Get a quote for this model',
     note: 'Product colours may vary depending on your screen settings.',
+    zoomHint: 'Hover over or click the image for a closer look.',
   },
   production: {
     metaDescription: 'Karar Halı’s carpet production process, from design to shipping.',
     eyebrow: 'Production',
     title: 'From design to shipping, a controlled process.',
+    titleAccent: 'controlled',
     description:
       'At our facility in the Gaziantep 3rd Organized Industrial Zone, our own teams manage every stage of our carpets.',
     processEyebrow: 'Process',

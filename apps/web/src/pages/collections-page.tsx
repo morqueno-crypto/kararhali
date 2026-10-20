@@ -16,6 +16,7 @@ export function CollectionsPage() {
       <PageHero
         eyebrow={t.collections.eyebrow}
         title={t.collections.title}
+        titleAccent={t.collections.titleAccent}
         description={t.collections.description}
       />
       <section className="py-16 sm:py-20">

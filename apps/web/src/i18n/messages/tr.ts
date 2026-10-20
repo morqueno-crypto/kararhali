@@ -23,6 +23,10 @@ export const tr = {
     homeLink: (name: string) => `${name} ana sayfa`,
     language: 'Dil seçimi',
     backHome: 'Ana sayfaya dön',
+    skipIntro: 'Girişi geç',
+    explore: 'Keşfet',
+    zoom: 'Görseli büyüt',
+    close: 'Kapat',
   },
   footer: {
     pages: 'Sayfalar',
@@ -39,6 +43,7 @@ export const tr = {
     hero: {
       eyebrow: 'Gaziantep · 1966’dan beri',
       title: 'Kararsız kalmayın.',
+      titleAccent: 'kalmayın.',
       text: 'Doğru seçilmiş bir halı evin havasını tamamen değiştirir. Modern, şık ve ihtişamlı koleksiyonlarımızla her mekâna uygun bir halı üretiyoruz.',
       primary: 'Koleksiyonları keşfedin',
       secondary: 'Hikâyemiz',
@@ -47,6 +52,7 @@ export const tr = {
     featured: {
       eyebrow: 'Öne çıkanlar',
       title: 'Sezonun gözde koleksiyonları',
+      titleAccent: 'gözde',
       description: 'Halı ve rulo kesim serilerimizden en çok tercih edilen tasarımlar.',
       cta: 'Tüm koleksiyonlar',
     },
@@ -57,16 +63,18 @@ export const tr = {
       rollsText: 'Koridordan mutfağa, evinizin her alanı için istediğiniz boyda kesilir.',
       cta: 'Göz atın',
     },
-    craft: {
-      eyebrow: 'Üretim',
-      title: 'İplikten halıya, tek çatı altında',
+    story: {
+      eyebrow: 'Üretim hikâyesi',
+      title: 'İplikten halıya, tek çatı altında.',
+      titleAccent: 'halıya',
       text: 'Tasarım ekibimizin geliştirdiği özgün desenler, son teknoloji tezgâhlarda ilmek ilmek dokunur ve her aşamada kalite kontrolünden geçer.',
       cta: 'Üretim sürecimiz',
-      imageAlt: 'Makarada iplik',
+      step: (current: number, total: number) => `Adım ${current} / ${total}`,
     },
     values: {
       eyebrow: 'Neden Karar Halı',
       title: 'Altmış yıllık birikim, bugünün tasarımı',
+      titleAccent: 'Altmış yıllık',
     },
   },
   cta: {
@@ -78,6 +86,7 @@ export const tr = {
     metaDescription: '1966’dan bugüne Karar Halı: hikâyemiz, iş planımız ve vizyonumuz.',
     eyebrow: 'Kurumsal',
     title: '1966’dan günümüze, ev tekstilinde köklü bir marka.',
+    titleAccent: '1966’dan',
     description:
       'Gaziantep’te son teknoloji ve en iyi malzemeyle, özgün renk ve desenlerde halılar üretiyoruz.',
     storyEyebrow: 'Hikâyemiz',
@@ -102,6 +111,7 @@ export const tr = {
       'Karar Halı’nın halı ve rulo kesim koleksiyonlarını, modelleri ve ebatlarıyla keşfedin.',
     eyebrow: 'Koleksiyonlar',
     title: 'Her mekâna bir Karar',
+    titleAccent: 'bir Karar',
     description:
       'Halı ve rulo kesim olmak üzere iki ana gruptaki koleksiyonlarımızı inceleyin; her koleksiyonun modellerine ve renk seçeneklerine göz atın.',
     filterLabel: 'Kategoriye göre filtrele',
@@ -138,11 +148,13 @@ export const tr = {
     related: 'Koleksiyondan diğer desenler',
     cta: 'Bu model için teklif alın',
     note: 'Ürün renkleri ekran ayarlarına göre farklılık gösterebilir.',
+    zoomHint: 'Yakından incelemek için görselin üzerinde gezinin veya tıklayın.',
   },
   production: {
     metaDescription: 'Karar Halı’nın tasarımdan sevkiyata uzanan halı üretim süreci.',
     eyebrow: 'Üretim',
     title: 'Tasarımdan sevkiyata, kontrollü üretim.',
+    titleAccent: 'kontrollü',
     description:
       'Gaziantep 3. Organize Sanayi Bölgesi’ndeki tesisimizde, halılarımızın her aşamasını kendi ekiplerimizle yönetiyoruz.',
     processEyebrow: 'Süreç',

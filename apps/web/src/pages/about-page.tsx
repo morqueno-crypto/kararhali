@@ -5,7 +5,7 @@ import { PageMeta } from '@/components/ui/page-meta'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { StatGrid } from '@/components/ui/stat-grid'
 import { FairGallery, FeatureGrid } from '@/features/company'
-import { CtaSection } from '@/features/home'
+import { CtaSection } from '@/components/layout/cta-section'
 import { useI18n } from '@/i18n'
 import type { aboutLoader } from './about-loader'
 
@@ -20,6 +20,7 @@ export function AboutPage() {
       <PageHero
         eyebrow={about.eyebrow}
         title={about.title}
+        titleAccent={about.titleAccent}
         description={about.description}
         image={{ src: images.catalogs, alt: '' }}
       />

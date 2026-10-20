@@ -1,17 +1,22 @@
 import { ArrowRight } from 'lucide-react'
 import { ButtonLink } from '@/components/ui/button-link'
 import { Container } from '@/components/ui/container'
+import { Reveal } from '@/components/ui/reveal'
 import { useI18n } from '@/i18n'
 
+/** Sayfa sonlarındaki teklif çağrısı (GSAP'sız; tüm sayfalarda kullanılabilir). */
 export function CtaSection() {
   const { t, path } = useI18n()
 
   return (
     <section className="py-20 sm:py-28">
       <Container>
-        <div className="relative isolate overflow-hidden rounded-[2rem] border border-line bg-surface px-8 py-16 sm:px-16 sm:py-20">
+        <Reveal
+          variant="scale"
+          className="group relative isolate overflow-hidden rounded-[2rem] border border-line bg-surface px-8 py-16 sm:px-16 sm:py-20"
+        >
           <div
-            className="absolute -top-32 -right-32 -z-10 size-96 rounded-full bg-accent/20 blur-3xl"
+            className="absolute -top-32 -right-32 -z-10 size-96 rounded-full bg-accent/20 blur-3xl transition-transform duration-[1.5s] ease-(--ease-out-expo) group-hover:scale-125"
             aria-hidden="true"
           />
           <div className="max-w-2xl">
@@ -21,7 +26,7 @@ export function CtaSection() {
               {t.cta.button} <ArrowRight className="size-4" aria-hidden="true" />
             </ButtonLink>
           </div>
-        </div>
+        </Reveal>
       </Container>
     </section>
   )

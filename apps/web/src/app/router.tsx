@@ -8,8 +8,6 @@ import {
   type Locale,
   type RouteHandle,
 } from '@/i18n'
-import { homeLoader } from '@/pages/home-loader'
-import { HomePage } from '@/pages/home-page'
 import { NotFoundPage } from '@/pages/not-found-page'
 import { RouteErrorPage } from '@/pages/route-error-page'
 
@@ -17,7 +15,8 @@ const handle = (page: RouteHandle['page']): RouteHandle => ({ page })
 
 /**
  * Bir dilin tüm sayfaları: /tr/kurumsal, /en/about ...
- * Ana sayfa ve 404 dışındaki sayfalar lazy yüklenir (ayrı JS parçaları).
+ * 404 dışındaki tüm sayfalar lazy yüklenir (ayrı JS parçaları). Ana sayfa da lazy'dir:
+ * GSAP yalnızca ana sayfada kullanıldığı için diğer sayfalar onu hiç indirmez.
  */
 function localeRoutes(locale: Locale): RouteObject {
   const segment = (page: keyof typeof pageSegments) => pageSegments[page][locale]
@@ -31,9 +30,14 @@ function localeRoutes(locale: Locale): RouteObject {
         children: [
           {
             index: true,
-            element: <HomePage />,
-            loader: () => homeLoader(locale),
             handle: handle('home'),
+            lazy: async () => {
+              const [page, data] = await Promise.all([
+                import('@/pages/home-page'),
+                import('@/pages/home-loader'),
+              ])
+              return { Component: page.HomePage, loader: () => data.homeLoader(locale) }
+            },
           },
           {
             path: segment('about'),
