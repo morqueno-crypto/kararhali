@@ -4,7 +4,8 @@ import { ButtonLink } from '@/components/ui/button-link'
 import { Container } from '@/components/ui/container'
 import { PageMeta } from '@/components/ui/page-meta'
 import { RemoteImage } from '@/components/ui/remote-image'
-import { ModelCard, SizeList } from '@/features/collections'
+import { Reveal } from '@/components/ui/reveal'
+import { ImageZoom, ModelCard, SizeList } from '@/features/collections'
 import { useI18n } from '@/i18n'
 import { cn } from '@/lib/cn'
 import type { modelDetailLoader } from './model-detail-loader'
@@ -37,23 +38,24 @@ export function ModelDetailPage() {
 
           <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-6">
-              <div className="mx-auto flex aspect-11/16 max-w-md items-center justify-center overflow-hidden rounded-3xl border border-line bg-paper p-6 sm:p-10 lg:sticky lg:top-28 lg:max-w-none">
-                <RemoteImage
-                  key={model.image}
-                  src={model.image}
-                  alt={labels.imageAlt(model.code, model.color)}
-                  loading="eager"
-                  className="size-full object-contain"
-                />
+              <div className="mx-auto max-w-md lg:sticky lg:top-28 lg:max-w-none">
+                <ImageZoom src={model.image} alt={labels.imageAlt(model.code, model.color)} />
+                <p className="mt-3 text-center text-xs text-subtle">{labels.zoomHint}</p>
               </div>
             </div>
 
             <div className="lg:col-span-6 lg:pt-6">
-              <p className="text-xs font-medium tracking-[0.25em] text-accent uppercase">
+              <Reveal
+                as="p"
+                variant="tracking"
+                className="text-xs font-medium tracking-[0.25em] text-accent uppercase"
+              >
                 {labels.eyebrow(collection.name)}
-              </p>
-              <h1 className="mt-4 text-5xl font-semibold text-ink tabular-nums sm:text-7xl">
-                {model.code}
+              </Reveal>
+              <h1 className="mt-4 overflow-hidden text-5xl font-semibold text-ink tabular-nums sm:text-7xl">
+                <Reveal as="span" variant="mask" className="block">
+                  {model.code}
+                </Reveal>
               </h1>
               <p className="mt-3 text-xl text-muted">{model.color}</p>
               <p className="mt-6 max-w-lg leading-relaxed text-muted">{collection.description}</p>

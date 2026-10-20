@@ -29,8 +29,9 @@ export function SiteHeader() {
                 to={path(page)}
                 className={({ isActive }) =>
                   cn(
-                    'text-sm font-medium transition-colors hover:text-ink',
-                    isActive ? 'text-ink' : 'text-muted',
+                    // Altta soldan sağa çizilen ince çizgi
+                    'relative py-1 text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:bg-accent after:transition-transform after:duration-500 after:ease-(--ease-out-expo) hover:text-ink hover:after:scale-x-100',
+                    isActive ? 'text-ink after:scale-x-100' : 'text-muted after:scale-x-0',
                   )
                 }
               >
