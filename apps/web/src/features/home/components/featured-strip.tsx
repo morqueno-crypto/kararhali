@@ -9,6 +9,7 @@ import { cn } from '@/lib/cn'
 import { DESKTOP_MOTION_QUERY } from '@/lib/motion/constants'
 import { gsap, useGSAP } from '@/lib/motion/gsap'
 import { useMediaQuery } from '@/lib/motion/use-media-query'
+import { useContent } from '@/site'
 import type { Collection } from '@/types/collection'
 
 /**
@@ -16,8 +17,8 @@ import type { Collection } from '@/types/collection'
  * kart görselleri ters yönde hafif parallax yapar. Mobilde / reduced-motion'da yatay kaydırılan (snap) liste.
  */
 export function FeaturedStrip({ collections }: { collections: Collection[] }) {
-  const { t, path } = useI18n()
-  const { featured } = t.home
+  const { path } = useI18n()
+  const featured = useContent('home.featured')
   const animated = useMediaQuery(DESKTOP_MOTION_QUERY)
   const scope = useRef<HTMLElement>(null)
   const track = useRef<HTMLDivElement>(null)

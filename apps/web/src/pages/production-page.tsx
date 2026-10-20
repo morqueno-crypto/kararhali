@@ -1,33 +1,37 @@
-import { useLoaderData } from 'react-router'
+import { CtaSection } from '@/components/layout/cta-section'
 import { Container } from '@/components/ui/container'
 import { PageHero } from '@/components/ui/page-hero'
 import { PageMeta } from '@/components/ui/page-meta'
 import { RemoteImage } from '@/components/ui/remote-image'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { FeatureGrid } from '@/features/company'
-import { CtaSection } from '@/components/layout/cta-section'
 import { useI18n } from '@/i18n'
-import type { productionLoader } from './production-loader'
+import { useSite } from '@/site'
 
 export function ProductionPage() {
-  const { steps, images } = useLoaderData<typeof productionLoader>()
   const { t } = useI18n()
-  const { production } = t
+  const { content } = useSite()
+  const production = content['production.page']
+  const categories = content['home.categories']
 
   const types = [
-    { title: t.home.categories.carpetsTitle, text: production.carpetsText, image: images.carpets },
-    { title: t.home.categories.rollsTitle, text: production.rollsText, image: images.rolls },
+    {
+      title: categories.carpetsTitle,
+      text: production.carpetsText,
+      image: production.carpetsImage,
+    },
+    { title: categories.rollsTitle, text: production.rollsText, image: production.rollsImage },
   ]
 
   return (
     <>
-      <PageMeta title={t.nav.production} description={production.metaDescription} />
+      <PageMeta title={t.nav.production} description={production.description} />
       <PageHero
         eyebrow={production.eyebrow}
         title={production.title}
         titleAccent={production.titleAccent}
         description={production.description}
-        image={{ src: images.craft, alt: production.imageAlt }}
+        image={{ src: production.image, alt: '' }}
       />
 
       <section className="py-20 sm:py-28">
@@ -37,7 +41,12 @@ export function ProductionPage() {
             title={production.processTitle}
             description={production.processDescription}
           />
-          <FeatureGrid items={steps} numbered columns={3} className="mt-12" />
+          <FeatureGrid
+            items={content['production.steps'].items}
+            numbered
+            columns={3}
+            className="mt-12"
+          />
         </Container>
       </section>
 

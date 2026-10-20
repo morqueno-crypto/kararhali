@@ -1,7 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router'
+import { OWNER } from '@karar-hali/api/testing'
 import { routes } from '@/app/router'
+import { failNextRequest, testApi } from '@/test/api'
 
 function renderRoute(path: string) {
   const router = createMemoryRouter(routes, { initialEntries: [path] })
@@ -89,5 +91,36 @@ describe('router', () => {
       expect(screen.queryByRole('heading', { level: 3, name: 'Laguna' })).not.toBeInTheDocument(),
     )
     expect(screen.getByRole('heading', { level: 3, name: 'Lizbon' })).toBeInTheDocument()
+  })
+
+  it("panelde (API'de) değiştirilen içerik sitede görünür", async () => {
+    const api = testApi()
+    const cookie = await api.login(OWNER.email, OWNER.password)
+    const current = await (
+      await api.request('/api/v1/admin/content/collections.page', { cookie })
+    ).json()
+    const data = structuredClone(current.data)
+    data.tr.title = 'Panelden gelen başlık'
+    data.tr.titleAccent = 'Panelden'
+    const saved = await api.request('/api/v1/admin/content/collections.page', {
+      method: 'PUT',
+      cookie,
+      json: data,
+    })
+    expect(saved.status).toBe(200)
+
+    renderRoute('/tr/koleksiyonlar')
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Panelden gelen başlık' }),
+    ).toBeInTheDocument()
+  })
+
+  it("API'ye ulaşılamazsa anlaşılır bir hata sayfası gösterir", async () => {
+    failNextRequest(503, { error: { code: 'unavailable', message: 'down' } })
+    renderRoute('/en/about')
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'The site cannot be loaded right now' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Try again/ })).toBeInTheDocument()
   })
 })

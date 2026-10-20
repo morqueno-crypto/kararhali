@@ -1,10 +1,6 @@
-// Arayüz metinleri (Türkçe). en.ts aynı yapıyı birebir uygulamak zorundadır.
+// Arayüz etiketleri (Türkçe). en.ts aynı yapıyı birebir uygulamak zorundadır.
+// Sayfa içerikleri (başlıklar, metinler, görseller) ve firma bilgileri burada DEĞİL, API'den gelir.
 export const tr = {
-  meta: {
-    tagline: 'Kararsız kalmayın',
-    description:
-      'Karar Halı; 1966’dan bu yana Gaziantep’te özgün desenli halı ve rulo kesim halı koleksiyonları üreten köklü bir ev tekstili üreticisidir.',
-  },
   nav: {
     home: 'Ana sayfa',
     about: 'Kurumsal',
@@ -33,87 +29,14 @@ export const tr = {
     contact: 'İletişim',
     follow: 'Bizi takip edin',
     rights: 'Tüm hakları saklıdır.',
-    demo: 'Bu site bir tasarım demosudur. Logo ve ürün görselleri kararhali.com’dan alınmıştır.',
-  },
-  contactInfo: {
-    address: '3. Organize Sanayi Bölgesi, 83302 Nolu Cadde No: 2, 27120 Başpınar / Gaziantep',
-    hours: 'Pazartesi – Cumartesi, 08:30 – 18:00',
   },
   home: {
-    hero: {
-      eyebrow: 'Gaziantep · 1966’dan beri',
-      title: 'Kararsız kalmayın.',
-      titleAccent: 'kalmayın.',
-      text: 'Doğru seçilmiş bir halı evin havasını tamamen değiştirir. Modern, şık ve ihtişamlı koleksiyonlarımızla her mekâna uygun bir halı üretiyoruz.',
-      primary: 'Koleksiyonları keşfedin',
-      secondary: 'Hikâyemiz',
-      imageAlt: 'Karar Halı koleksiyonundan bir salon görünümü',
-    },
-    featured: {
-      eyebrow: 'Öne çıkanlar',
-      title: 'Sezonun gözde koleksiyonları',
-      titleAccent: 'gözde',
-      description: 'Halı ve rulo kesim serilerimizden en çok tercih edilen tasarımlar.',
-      cta: 'Tüm koleksiyonlar',
-    },
-    categories: {
-      carpetsTitle: 'Halı koleksiyonları',
-      carpetsText: 'Modern, şık ve ihtişamlı halı modellerimiz salonlarınızı bekliyor.',
-      rollsTitle: 'Rulo kesim koleksiyonları',
-      rollsText: 'Koridordan mutfağa, evinizin her alanı için istediğiniz boyda kesilir.',
-      cta: 'Göz atın',
-    },
-    story: {
-      eyebrow: 'Üretim hikâyesi',
-      title: 'İplikten halıya, tek çatı altında.',
-      titleAccent: 'halıya',
-      text: 'Tasarım ekibimizin geliştirdiği özgün desenler, son teknoloji tezgâhlarda ilmek ilmek dokunur ve her aşamada kalite kontrolünden geçer.',
-      cta: 'Üretim sürecimiz',
-      step: (current: number, total: number) => `Adım ${current} / ${total}`,
-    },
-    values: {
-      eyebrow: 'Neden Karar Halı',
-      title: 'Altmış yıllık birikim, bugünün tasarımı',
-      titleAccent: 'Altmış yıllık',
-    },
-  },
-  cta: {
-    title: 'Bayilik ve toptan satış için bizimle çalışın.',
-    text: 'Koleksiyonlarımız, stok durumu ve bayilik koşulları hakkında bilgi almak için satış ekibimizle iletişime geçin.',
-    button: 'Teklif isteyin',
+    storyStep: (current: number, total: number) => `Adım ${current} / ${total}`,
   },
   about: {
-    metaDescription: '1966’dan bugüne Karar Halı: hikâyemiz, iş planımız ve vizyonumuz.',
-    eyebrow: 'Kurumsal',
-    title: '1966’dan günümüze, ev tekstilinde köklü bir marka.',
-    titleAccent: '1966’dan',
-    description:
-      'Gaziantep’te son teknoloji ve en iyi malzemeyle, özgün renk ve desenlerde halılar üretiyoruz.',
-    storyEyebrow: 'Hikâyemiz',
-    storyTitle: 'Altmış yıllık tekstil tecrübesi',
-    story: [
-      '1966 yılından bugüne tekstil sektöründe faaliyet gösteren firmamız, son kullanıcıya yönelik ev tekstili üreticisi olarak Gaziantep’te halı üretiyor.',
-      'Üretimde son teknolojiyi ve en iyi malzemeyi kullanıyor; müşteri beklentilerine uygun özgün renk ve desenlerle ürettiğimiz ürünleri etkin pazarlama ağımızla beğeniye sunuyoruz.',
-      'Kendi bünyemizdeki tasarım ekibiyle geliştirdiğimiz eşsiz desenleri modern dokuma teknikleriyle halılara işliyor, her beğeniye uygun ürünler sunuyoruz.',
-    ],
-    pillarsEyebrow: 'İlkelerimiz',
-    pillarsTitle: 'Bizi biz yapan değerler',
-    valuesEyebrow: 'Güçlü yönlerimiz',
-    valuesTitle: 'Neden Karar Halı',
-    fairsEyebrow: 'Fuarlar',
-    fairsTitle: 'Sektörün buluşma noktalarındayız',
-    fairsText:
-      'Yurt içi ve yurt dışı fuarlarda yeni koleksiyonlarımızı iş ortaklarımızla buluşturuyoruz.',
     fairAlt: (index: number) => `Fuar standımızdan bir kare (${index})`,
   },
   collections: {
-    metaDescription:
-      'Karar Halı’nın halı ve rulo kesim koleksiyonlarını, modelleri ve ebatlarıyla keşfedin.',
-    eyebrow: 'Koleksiyonlar',
-    title: 'Her mekâna bir Karar',
-    titleAccent: 'bir Karar',
-    description:
-      'Halı ve rulo kesim olmak üzere iki ana gruptaki koleksiyonlarımızı inceleyin; her koleksiyonun modellerine ve renk seçeneklerine göz atın.',
     filterLabel: 'Kategoriye göre filtrele',
     all: 'Tümü',
     empty: 'Bu kategoride henüz koleksiyon bulunmuyor.',
@@ -150,28 +73,7 @@ export const tr = {
     note: 'Ürün renkleri ekran ayarlarına göre farklılık gösterebilir.',
     zoomHint: 'Yakından incelemek için görselin üzerinde gezinin veya tıklayın.',
   },
-  production: {
-    metaDescription: 'Karar Halı’nın tasarımdan sevkiyata uzanan halı üretim süreci.',
-    eyebrow: 'Üretim',
-    title: 'Tasarımdan sevkiyata, kontrollü üretim.',
-    titleAccent: 'kontrollü',
-    description:
-      'Gaziantep 3. Organize Sanayi Bölgesi’ndeki tesisimizde, halılarımızın her aşamasını kendi ekiplerimizle yönetiyoruz.',
-    processEyebrow: 'Süreç',
-    processTitle: 'Bir halının yolculuğu',
-    processDescription:
-      'Her ürün, bir sonraki aşamaya geçmeden önce ölçülebilir kalite kriterlerine göre kontrol edilir.',
-    typesEyebrow: 'Ürün grupları',
-    typesTitle: 'Halı ve rulo kesim',
-    carpetsText: 'Standart ebatlarda (160 × 230, 200 × 290 cm) üretilen salon ve oda halıları.',
-    rollsText: '80 cm’den 300 cm’ye kadar genişliklerde, istenen boyda kesilen rulo halılar.',
-    imageAlt: 'İplik makarası',
-  },
   contact: {
-    metaDescription: 'Bayilik, toptan satış ve ürün bilgisi için Karar Halı ile iletişime geçin.',
-    eyebrow: 'İletişim',
-    title: 'Bizimle iletişime geçin.',
-    description: 'Size daha iyi hizmet verebilmemiz için formu doldurun ya da bizi arayın.',
     info: {
       address: 'Adres',
       phone: 'Telefon',
@@ -187,6 +89,7 @@ export const tr = {
       message: 'Mesajınız',
       submit: 'Mesajı Gönder',
       sending: 'Gönderiliyor…',
+      honeypot: 'Bu alanı boş bırakın',
     },
     subjects: {
       dealership: 'Bayilik',
@@ -199,10 +102,13 @@ export const tr = {
       email: 'Geçerli bir e-posta adresi girin.',
       message: 'Mesajınız en az 10 karakter olmalı.',
     },
+    errors: {
+      tooMany: 'Kısa sürede çok fazla mesaj gönderildi. Lütfen birkaç dakika sonra tekrar deneyin.',
+      generic: 'Mesajınız gönderilemedi. Lütfen tekrar deneyin veya bizi telefonla arayın.',
+    },
     success: {
       title: 'Mesajınız alındı',
       text: 'Teşekkür ederiz. Satış ekibimiz en kısa sürede sizinle iletişime geçecek.',
-      note: 'Not: Bu bir demo sitedir, form gerçekte bir yere gönderilmez.',
     },
   },
   notFound: {
@@ -213,6 +119,9 @@ export const tr = {
   error: {
     title: 'Bir şeyler ters gitti',
     text: 'Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.',
+    unavailable: 'Site şu anda yüklenemiyor',
+    unavailableText: 'Sunucuya ulaşılamadı. Lütfen birkaç dakika sonra tekrar deneyin.',
+    retry: 'Tekrar dene',
   },
 }
 

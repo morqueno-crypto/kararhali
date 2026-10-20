@@ -6,8 +6,7 @@ export async function collectionDetailLoader({ params }: LoaderFunctionArgs, loc
   const collection = params.slug ? await getCollectionBySlug(params.slug, locale) : undefined
   if (!collection) throw new Response('Not Found', { status: 404 })
 
-  const others = (await getCollections(locale))
-    .filter((c) => c.slug !== collection.slug && c.category === collection.category)
-    .slice(0, 3)
+  const sameCategory = await getCollections(locale, { category: collection.category })
+  const others = sameCategory.filter((c) => c.slug !== collection.slug).slice(0, 3)
   return { collection, others }
 }

@@ -1,9 +1,11 @@
 import { mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { createApp } from '../src/app'
 import { configureSqlite, createDatabase } from '../src/db/client'
 import { runMigrations } from '../src/db/migrate'
+import { contactMessages } from '../src/db/schema'
 import { seedDatabase } from '../src/db/seed'
 import { loadEnv } from '../src/env'
 import { createRateLimiter } from '../src/lib/rate-limit'
@@ -20,8 +22,18 @@ export const OWNER = {
   password: 'owner-password-123',
 }
 
+interface TestAppOptions {
+  /**
+   * drizzle/ klasörü. Varsayılan bu dosyaya göre bulunur; import.meta.url'in file: olmadığı
+   * ortamlarda (ör. başka paketin jsdom testleri) çağıran tarafından verilmelidir.
+   */
+  migrationsFolder?: string
+}
+
 /** Bellek içi veritabanı + migration + seed ile izole bir uygulama örneği. */
-export async function createTestApp() {
+export async function createTestApp({
+  migrationsFolder = fileURLToPath(new URL('../drizzle', import.meta.url)),
+}: TestAppOptions = {}) {
   const env = loadEnv({
     NODE_ENV: 'test',
     DATABASE_URL: ':memory:',
@@ -30,7 +42,7 @@ export async function createTestApp() {
   })
   const db = createDatabase(env.DATABASE_URL)
   await configureSqlite(db)
-  await runMigrations(db)
+  await runMigrations(db, migrationsFolder)
   await seedDatabase(db, OWNER)
 
   const app = createApp({
@@ -71,5 +83,10 @@ export async function createTestApp() {
     return setCookie.split(';')[0]!
   }
 
-  return { app, db, env, request, login }
+  /** İletişim formundan gelen mesajlar (diğer paketlerin testlerinde doğrulama için). */
+  function listContactMessages() {
+    return db.select().from(contactMessages)
+  }
+
+  return { app, db, env, request, login, listContactMessages }
 }

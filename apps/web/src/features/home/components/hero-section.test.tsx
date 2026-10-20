@@ -1,3 +1,4 @@
+import type { PublicContent } from '@karar-hali/shared'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
@@ -5,11 +6,22 @@ import { LocaleContext } from '@/i18n'
 import { setMediaMatcher } from '@/test/media'
 import { HeroSection } from './hero-section'
 
+const hero: PublicContent['home.hero'] = {
+  eyebrow: 'Gaziantep · 1966’dan beri',
+  title: 'Kararsız kalmayın.',
+  titleAccent: 'kalmayın.',
+  text: 'Doğru seçilmiş bir halı evin havasını değiştirir.',
+  primaryCta: 'Koleksiyonları keşfedin',
+  secondaryCta: 'Hikâyemiz',
+  image: 'https://example.com/hero.jpg',
+  imageAlt: 'Salon',
+}
+
 function renderHero() {
   return render(
     <MemoryRouter>
       <LocaleContext value="tr">
-        <HeroSection image="https://example.com/hero.jpg" />
+        <HeroSection content={hero} />
       </LocaleContext>
     </MemoryRouter>,
   )

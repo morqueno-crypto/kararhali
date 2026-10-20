@@ -1,5 +1,5 @@
-import { siteConfig } from '@/config/site'
-import { defaultLocale, locales, useAlternatePaths, useI18n } from '@/i18n'
+import { defaultLocale, locales, useAlternatePaths } from '@/i18n'
+import { useSite } from '@/site'
 
 interface PageMetaProps {
   title?: string
@@ -8,17 +8,17 @@ interface PageMetaProps {
 
 // React 19, <title>, <meta> ve <link> etiketlerini otomatik olarak <head> içine taşır.
 export function PageMeta({ title, description }: PageMetaProps) {
-  const { t } = useI18n()
+  const { general } = useSite().settings
   const alternates = useAlternatePaths()
   const origin = typeof window === 'undefined' ? '' : window.location.origin
   const fullTitle = title
-    ? `${title} | ${siteConfig.name}`
-    : `${siteConfig.name} — ${t.meta.tagline}`
+    ? `${title} | ${general.siteName}`
+    : `${general.siteName} — ${general.tagline}`
 
   return (
     <>
       <title>{fullTitle}</title>
-      <meta name="description" content={description ?? t.meta.description} />
+      <meta name="description" content={description ?? general.description} />
       {locales.map((locale) => (
         <link
           key={locale}

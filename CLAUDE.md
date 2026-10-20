@@ -1,11 +1,10 @@
 # Karar Halı — proje kuralları
 
-Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site. Yol haritası: **1) backend/API (tamam) → 2) sitenin API'ye bağlanması → 3) admin paneli.** Site şu an hâlâ `apps/web/src/data/` altındaki statik veriyi okuyor; 2. aşamada API'ye geçecek (bkz. "Backend" bölümü).
+Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site. Yol haritası: **1) backend/API (tamam) → 2) sitenin API'ye bağlanması (tamam) → 3) admin paneli.**
 
-- Koleksiyon adları, ebatlar, model görselleri, logo ve iletişim bilgileri kararhali.com'dan alınmıştır. Koleksiyon açıklama metinleri örnektir.
-- Görseller kopyalanmaz; `VITE_ASSET_BASE_URL` (varsayılan `https://www.kararhali.com/assets/img`) üzerinden uzak URL ile yüklenir. URL'ler yalnızca `lib/assets.ts` içindeki `assetUrl()` ile üretilir. Uzak görseller `components/ui/remote-image.tsx` ile gösterilir (tembel yükleme + hata yer tutucusu).
-- Her koleksiyonda sitedeki ilk 8 model listelenir. Model kaydı dosya adıdır (`6055A_KAHVE`); desen kodu, renk ve URL slug'ı (`6055a-kahve`) `services/collections.ts` içinde bu addan türetilir. Renk adları ve renk noktası değerleri `data/colors.ts`'te.
-- Route'lar: `/tr/koleksiyonlar/:slug` (koleksiyon) ve `/tr/koleksiyonlar/:slug/:model` (model detayı).
+- **Veri kaynağı:** Sitedeki tüm içerik ve firma bilgileri API'den gelir (`apps/api`, SQLite). Kodda statik içerik yoktur. Başlangıç verisi API seed'indedir: koleksiyonlar, ebatlar, model görselleri, logo ve iletişim bilgileri kararhali.com'dan alınmıştır; koleksiyon açıklamaları örnek metindir.
+- **Görseller:** Tam URL (şimdilik kararhali.com) veya API'nin servis ettiği `/uploads/...` yolu olarak gelir. `components/ui/remote-image.tsx` ile gösterilir (tembel yükleme + hata yer tutucusu).
+- **Route'lar:** `/tr/koleksiyonlar/:slug` (koleksiyon) ve `/tr/koleksiyonlar/:slug/:model` (model detayı).
 
 ## Teknoloji yığını
 
@@ -26,21 +25,23 @@ Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temal�
 
 ## Klasör yapısı (`apps/web/src`)
 
-- `app/`: router, provider'lar, layout'lar
-- `i18n/`: dil ayarları (`config.ts`), dile göre URL parçaları (`routes.ts`), arayüz metinleri (`messages/tr.ts`, `messages/en.ts`), `useI18n` / `useAlternatePaths` hook'ları
+- `app/`: router, provider'lar, layout'lar (`root-layout.tsx`, API kapalıyken gösterilen `app-error-page.tsx`)
+- `site/`: API'den gelen site verisi (ayarlar + içerik blokları) için `SiteContext`, `useSite()`, `useContent(key)`
+- `i18n/`: dil ayarları (`config.ts`), dile göre URL parçaları (`routes.ts`), **yalnızca arayüz etiketleri** (`messages/tr.ts`, `messages/en.ts`), `useI18n` / `useAlternatePaths` hook'ları
 - `pages/`: route sayfaları (ince) + `*-loader.ts` dosyaları (loader'lar ayrı dosyada, Fast Refresh için)
 - `features/<ad>/`: özellik modülleri; dışarıya yalnızca `index.ts` üzerinden açılır
 - `components/ui`, `components/layout`: paylaşılan bileşenler (`Reveal`, `Emphasis`, `CountUp`, `CustomCursor`, `CtaSection` ...)
 - `lib/motion/`: animasyon altyapısı (bkz. "Animasyon" bölümü)
-- `services/`: veri erişim katmanı (şimdi statik, sonra API)
-- `data/`: statik içerik · `config/`: env.ts, site.ts · `lib/`: yardımcılar · `types/`: paylaşılan tipler
+- `services/`: API ile konuşan tek katman (`site.ts`, `collections.ts`, `contact.ts`); istekler `lib/http.ts` üzerinden
+- `config/`: env.ts, site.ts (menü yapısı) · `lib/`: yardımcılar · `types/`: `@karar-hali/shared` tiplerinin kısa adları
+- `test/`: `api.ts` (testlerde gerçek API'yi bellek içi veritabanıyla aynı süreçte çalıştırır), `media.ts` (matchMedia sahtesi)
 - `styles/globals.css`: Tailwind + `@theme` içinde anlamsal (rol bazlı) koyu tema token'ları: `canvas` (sayfa zemini), `surface` / `raised` (kart yüzeyleri), `line` (çizgiler), `ink` / `muted` / `subtle` (metin seviyeleri), `accent` / `accent-strong` / `on-accent` (vurgu), `paper` (beyaz zeminli ürün fotoğrafları için açık yüzey). Bileşenlerde ham renk (`bg-stone-900`, `#fff` vb.) kullanılmaz; açık tema eklenecekse sadece bu token değerleri değişir.
 
 ## Mimari kurallar
 
 1. Katmanlar tek yönlü: `pages → features → components/ui, hooks, lib, services`. `components/ui` feature import etmez.
 2. Feature'lar birbirinin iç dosyalarını değil, yalnızca `index.ts` dosyasını import eder.
-3. Veri yalnızca `services/` üzerinden alınır; bileşenler `fetch` çağırmaz, `data/` klasörünü doğrudan import etmez. Route verisi loader'larla yüklenir.
+3. Veri yalnızca `services/` üzerinden alınır; bileşenler `fetch` çağırmaz. Sayfa verisi (koleksiyonlar vb.) route loader'larıyla, site geneli içerik `useSite()` / `useContent()` ile alınır.
 4. `import.meta.env` yalnızca `config/env.ts` içinde kullanılır; istemci env'leri `VITE_` ön eklidir.
 5. Import alias `@/` → `src/`.
 6. Dosyalar `kebab-case`, bileşenler `PascalCase`, named export.
@@ -88,9 +89,11 @@ Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temal�
 
 - URL dil önekli: `/tr/...` ve `/en/...`. Sayfa yolları dile göre değişir (`/tr/kurumsal` ↔ `/en/about`); tanımları `i18n/routes.ts` içindeki `pageSegments`'te.
 - `/` adresi tarayıcı diline göre yönlendirir: Türkçe ise `/tr`, değilse `/en`. Dil öneki olmayan adresler `/tr/...`'ye yönlendirilir.
-- Bileşenlerde sabit metin yazılmaz. Metinler `const { t, path } = useI18n()` ile alınır. Linkler `path('about')` veya `path('collectionDetail', { slug })` ile üretilir; `/tr/...` elle yazılmaz.
-- Yeni metin önce `messages/tr.ts`'e, sonra aynı anahtarla `messages/en.ts`'e eklenir. `en` dosyası `Messages` tipini uyguladığı için eksik anahtar derleme hatası verir.
-- İçerik verisi `Localized<T>` (`{ tr, en }`) alanlarıyla tutulur. Servisler `locale` parametresi alır ve tek dile çevrilmiş veri döner.
+- Bileşenlerde sabit metin yazılmaz. İki kaynak var:
+  - **Arayüz etiketleri** (menü, butonlar, form etiketleri, hata mesajları): `const { t, path } = useI18n()`. Yeni etiket önce `messages/tr.ts`'e, sonra aynı anahtarla `messages/en.ts`'e eklenir. `en` dosyası `Messages` tipini uyguladığı için eksik anahtar derleme hatası verir.
+  - **Sayfa içerikleri ve firma bilgileri** (başlıklar, metinler, görseller, iletişim): API'den, `useContent('home.hero')` / `useSite().settings`. Panelden düzenlenebilmeleri gereken her metin bu tarafta olmalıdır.
+- Linkler `path('about')` veya `path('collectionDetail', { slug })` ile üretilir; `/tr/...` elle yazılmaz.
+- API'ye her istekte `locale` gönderilir; API tek dile çevrilmiş veri döner.
 - Her route'un `handle: { page }` alanı vardır. Dil seçici ve hreflang etiketleri, aynı sayfanın diğer dildeki adresini buradan bulur.
 - Yeni sayfa eklerken: `pageSegments`'e ekle, `messages`'e `nav` metnini ekle, `router.tsx`'teki `localeRoutes` içine `handle` ile tanımla.
 - Yeni dil eklerken: `config.ts`'teki `locales` listesine ekle, `messages/<dil>.ts` dosyasını oluştur, `pageSegments` ve `Localized` verilere o dilin karşılığını ekle.
@@ -114,4 +117,10 @@ Ayrıntılar, uç noktalar ve yetki tablosu: [apps/api/README.md](apps/api/READM
 - **Seed:** idempotent'tir; yalnızca eksikleri ekler, paneldeki değişikliklerin üzerine yazmaz.
 - **Hata biçimi:** `{ error: { code, message, details? } }`. Değiştirici isteklerde `Origin` başlığı zorunlu (CSRF).
 
-**2. aşama (site → API) için not:** Site `/api` ve `/uploads` isteklerini Vite proxy üzerinden API'ye iletir (`apps/web/vite.config.ts`). `apps/web/src/services/*` fonksiyonları `@/lib/http` ile API çağrısına çevrilecek; bileşenler mümkün olduğunca değişmeyecek. Ardından `apps/web/src/data/` silinecek. Arayüzdeki küçük sabit etiketler (menü, buton metinleri) i18n'de kalacak; sayfa içerikleri API'den gelecek.
+## Site ↔ API
+
+- **Adres:** Site `/api` ve `/uploads` isteklerini aynı adrese yapar. Geliştirmede Vite proxy (`apps/web/vite.config.ts`, dev ve preview) bunları `localhost:3000`'e iletir; canlıda ikisi aynı alan adı altında yayınlanır. Farklı alan adında çalışacaksa `VITE_API_URL` verilir.
+- **Site verisi:** Dil route'unun (`locale-tr`, `locale-en`) loader'ı `getSite(locale)` ile `/api/v1/site`'ı bir kez yükler (`shouldRevalidate: false`) ve `RootLayout` bunu `SiteContext` ile dağıtır. Zorunlu bir ayar veya içerik bloğu eksikse açık bir hata verilir.
+- **Hatalar:** Site verisi yüklenemezse (API kapalı) en dıştaki `AppErrorPage` gösterilir; context'siz çalışır, dili adresten çıkarır. Sayfa içindeki hatalar `RouteErrorPage`'e, 404'ler `NotFoundPage`'e düşer.
+- **Önbellek:** API herkese açık yanıtlara `Cache-Control: max-age=60` koyar. Panelde yapılan bir değişiklik normal gezintide en geç ~1 dakika içinde görünür; sayfayı yenileyince hemen görünür.
+- **Testler:** Site testleri sahte veri değil, `@karar-hali/api/testing` ile aynı süreçte çalışan gerçek API'yi kullanır (bellek içi SQLite + seed). Bir isteği hatalı döndürmek için `failNextRequest(status, body)`. Bu yüzden site testleri API şemasındaki kırıcı değişiklikleri de yakalar.

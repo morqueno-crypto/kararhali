@@ -1,4 +1,5 @@
 import { createBrowserRouter, redirect, type RouteObject } from 'react-router'
+import { AppErrorPage } from '@/app/layouts/app-error-page'
 import { RootLayout } from '@/app/layouts/root-layout'
 import {
   defaultLocale,
@@ -10,19 +11,24 @@ import {
 } from '@/i18n'
 import { NotFoundPage } from '@/pages/not-found-page'
 import { RouteErrorPage } from '@/pages/route-error-page'
+import { getSite } from '@/services/site'
 
 const handle = (page: RouteHandle['page']): RouteHandle => ({ page })
 
 /**
  * Bir dilin tüm sayfaları: /tr/kurumsal, /en/about ...
- * 404 dışındaki tüm sayfalar lazy yüklenir (ayrı JS parçaları). Ana sayfa da lazy'dir:
- * GSAP yalnızca ana sayfada kullanıldığı için diğer sayfalar onu hiç indirmez.
+ * Dil route'unun loader'ı site verisini (ayarlar + içerik) bir kez yükler; sayfa geçişlerinde
+ * yeniden çekilmez. Sayfalar kendi verilerini (koleksiyonlar vb.) kendi loader'larıyla alır.
+ * 404 dışındaki tüm sayfalar lazy yüklenir; GSAP yalnızca ana sayfanın paketindedir.
  */
 function localeRoutes(locale: Locale): RouteObject {
   const segment = (page: keyof typeof pageSegments) => pageSegments[page][locale]
 
   return {
+    id: `locale-${locale}`,
     path: locale,
+    loader: () => getSite(locale),
+    shouldRevalidate: () => false,
     element: <RootLayout locale={locale} />,
     children: [
       {
@@ -42,13 +48,7 @@ function localeRoutes(locale: Locale): RouteObject {
           {
             path: segment('about'),
             handle: handle('about'),
-            lazy: async () => {
-              const [page, data] = await Promise.all([
-                import('@/pages/about-page'),
-                import('@/pages/about-loader'),
-              ])
-              return { Component: page.AboutPage, loader: () => data.aboutLoader(locale) }
-            },
+            lazy: () => import('@/pages/about-page').then((m) => ({ Component: m.AboutPage })),
           },
           {
             path: segment('collections'),
@@ -95,13 +95,8 @@ function localeRoutes(locale: Locale): RouteObject {
           {
             path: segment('production'),
             handle: handle('production'),
-            lazy: async () => {
-              const [page, data] = await Promise.all([
-                import('@/pages/production-page'),
-                import('@/pages/production-loader'),
-              ])
-              return { Component: page.ProductionPage, loader: () => data.productionLoader(locale) }
-            },
+            lazy: () =>
+              import('@/pages/production-page').then((m) => ({ Component: m.ProductionPage })),
           },
           {
             path: segment('contact'),
@@ -119,6 +114,8 @@ export const routes: RouteObject[] = [
   {
     path: '/',
     hydrateFallbackElement: <div className="min-h-dvh bg-canvas" />,
+    // Site verisi yüklenemezse (API kapalı vb.) layout da çizilemez; bağımsız hata sayfası gösterilir.
+    errorElement: <AppErrorPage />,
     children: [
       // Kök adres: tarayıcı diline göre yönlendir.
       { index: true, loader: () => redirect(`/${detectLocale()}`) },

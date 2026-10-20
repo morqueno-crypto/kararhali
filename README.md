@@ -2,7 +2,9 @@
 
 Karar Halı için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site ve onu yönetecek backend. Logo, koleksiyonlar, model görselleri ve iletişim bilgileri [kararhali.com](https://www.kararhali.com)'dan alınmıştır; görseller oradan uzak URL ile yüklenir, bu yüzden geliştirme sırasında internet bağlantısı gerekir.
 
-**Durum:** Backend/API hazır. Sıradaki adımlar: sitenin API'ye bağlanması, ardından admin paneli.
+**Durum:** Backend/API hazır ve site tüm içeriğini API'den okuyor. Sıradaki adım: admin paneli.
+
+> Site çalışmak için API'ye ihtiyaç duyar. `pnpm dev` ikisini birlikte başlatır; yalnızca siteyi başlatırsanız "Site şu anda yüklenemiyor" sayfası görünür.
 
 ## Gereksinimler
 

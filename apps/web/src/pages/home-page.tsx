@@ -11,29 +11,32 @@ import { CategorySplit, FeaturedStrip, HeroSection } from '@/features/home'
 import { ProductionStory } from '@/features/production'
 import { useI18n } from '@/i18n'
 import { useScrollTriggerSync } from '@/lib/motion/use-scroll-trigger-sync'
+import { useSite } from '@/site'
 import type { homeLoader } from './home-loader'
 
 export function HomePage() {
-  const { featured, company, steps } = useLoaderData<typeof homeLoader>()
-  const { t, path } = useI18n()
-  const { home } = t
+  const { featured } = useLoaderData<typeof homeLoader>()
+  const { path } = useI18n()
+  const { content } = useSite()
+  const story = content['home.story']
+  const values = content['home.values']
   useScrollTriggerSync()
 
   return (
     <>
       <PageMeta />
-      <HeroSection image={company.images.hero} />
+      <HeroSection content={content['home.hero']} />
 
       {/* Hero pin'i sırasında rulo kapanırken rakamlar alttan yükselir (yalnızca hareket izni varken) */}
       <section className="relative z-20 py-16 motion-safe:-mt-[45dvh] sm:py-20">
         <Container>
-          <StatGrid items={company.stats} />
+          <StatGrid items={content['company.stats'].items} />
         </Container>
       </section>
 
       <section className="pb-20 sm:pb-28">
         <Container>
-          <CategorySplit images={company.images} />
+          <CategorySplit content={content['home.categories']} />
         </Container>
       </section>
 
@@ -43,33 +46,33 @@ export function HomePage() {
         <Container className="lg:pt-24">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeading
-              eyebrow={home.story.eyebrow}
-              title={home.story.title}
-              titleAccent={home.story.titleAccent}
-              description={home.story.text}
+              eyebrow={story.eyebrow}
+              title={story.title}
+              titleAccent={story.titleAccent}
+              description={story.text}
             />
             <ButtonLink
               to={path('production')}
               variant="secondary"
               className="self-start sm:self-auto"
             >
-              {home.story.cta} <ArrowRight className="size-4" aria-hidden="true" />
+              {story.cta} <ArrowRight className="size-4" aria-hidden="true" />
             </ButtonLink>
           </div>
         </Container>
         <div className="mt-12 lg:mt-0">
-          <ProductionStory steps={steps} />
+          <ProductionStory steps={content['production.steps'].items} />
         </div>
       </section>
 
       <section className="py-20 sm:py-28">
         <Container>
           <SectionHeading
-            eyebrow={home.values.eyebrow}
-            title={home.values.title}
-            titleAccent={home.values.titleAccent}
+            eyebrow={values.eyebrow}
+            title={values.title}
+            titleAccent={values.titleAccent}
           />
-          <FeatureGrid items={company.values} numbered className="mt-12" />
+          <FeatureGrid items={content['company.values'].items} numbered className="mt-12" />
         </Container>
       </section>
 

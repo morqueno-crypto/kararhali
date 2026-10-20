@@ -7,17 +7,23 @@ import { Logo } from '@/components/ui/logo'
 import { siteConfig } from '@/config/site'
 import { useI18n } from '@/i18n'
 import { cn } from '@/lib/cn'
+import { useSite } from '@/site'
 import { LanguageSwitcher } from './language-switcher'
 
 export function SiteHeader() {
   const { t, path } = useI18n()
+  const site = useSite()
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/60 bg-canvas/80 backdrop-blur-xl">
       <Container className="flex h-18 items-center justify-between gap-4">
-        <Link to={path('home')} onClick={close} aria-label={t.common.homeLink(siteConfig.name)}>
+        <Link
+          to={path('home')}
+          onClick={close}
+          aria-label={t.common.homeLink(site.settings.general.siteName)}
+        >
           <Logo className="h-9 sm:h-10" />
         </Link>
 

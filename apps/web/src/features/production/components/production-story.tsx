@@ -60,7 +60,7 @@ function PinnedStory({ steps }: { steps: readonly Step[] }) {
         {/* İlerleme */}
         <div className="flex items-center gap-6">
           <span className="text-xs font-medium tracking-[0.25em] text-subtle uppercase tabular-nums">
-            {t.home.story.step(active + 1, steps.length)}
+            {t.home.storyStep(active + 1, steps.length)}
           </span>
           <div className="relative h-px flex-1 bg-line">
             <div

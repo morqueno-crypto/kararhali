@@ -1,3 +1,4 @@
+import type { PublicContent } from '@karar-hali/shared'
 import { ArrowRight, FastForward } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { ButtonLink } from '@/components/ui/button-link'
@@ -6,7 +7,7 @@ import { AccentWord } from '@/components/ui/emphasis'
 import { RemoteImage } from '@/components/ui/remote-image'
 import { useI18n } from '@/i18n'
 import { EASE } from '@/lib/motion/constants'
-import { gsap, useGSAP } from '@/lib/motion/gsap'
+import { gsap, ScrollTrigger, useGSAP } from '@/lib/motion/gsap'
 import { useLenis } from '@/lib/motion/use-lenis'
 import { useReducedMotion } from '@/lib/motion/use-media-query'
 import { hasSeenIntro, markIntroSeen } from '../intro-storage'
@@ -20,9 +21,8 @@ type IntroMode = 'full' | 'short' | 'none'
  * Aşağı kaydırınca sahne sabitlenir; fotoğraf büyür, başlık uzaklaşır, halı alttan yukarı "sarılarak" kapanır.
  * Reduced-motion açıksa hiçbir animasyon kurulmaz, içerik baştan görünür.
  */
-export function HeroSection({ image }: { image: string }) {
+export function HeroSection({ content: hero }: { content: PublicContent['home.hero'] }) {
   const { t, path } = useI18n()
-  const { hero } = t.home
   const reduced = useReducedMotion()
   const lenis = useLenis()
   const [mode] = useState<IntroMode>(() => (reduced ? 'none' : hasSeenIntro() ? 'short' : 'full'))
@@ -42,6 +42,12 @@ export function HeroSection({ image }: { image: string }) {
       lenis?.start()
     }
   }, [playing, lenis])
+
+  // Giriş sırasında kaydırma kilitliyken kaydırma çubuğu yoktur; pin ölçüleri bu genişlikle alınır.
+  // Kilit kalkınca (çubuk geri gelince) yeniden ölçülmezse bölüm yatayda taşar.
+  useEffect(() => {
+    if (!playing && !reduced) ScrollTrigger.refresh()
+  }, [playing, reduced])
 
   useGSAP(
     () => {
@@ -147,7 +153,7 @@ export function HeroSection({ image }: { image: string }) {
     { scope, dependencies: [reduced] },
   )
 
-  const accentWords = new Set(hero.titleAccent.split(' '))
+  const accentWords = new Set(hero.titleAccent.split(' ').filter(Boolean))
 
   return (
     <section
@@ -158,7 +164,7 @@ export function HeroSection({ image }: { image: string }) {
       <div data-hero="scale" className="absolute inset-0 -z-20 will-change-transform">
         <div data-hero="photo" className="absolute inset-0">
           <RemoteImage
-            src={image}
+            src={hero.image}
             alt={hero.imageAlt}
             loading="eager"
             fetchPriority="high"
@@ -205,14 +211,14 @@ export function HeroSection({ image }: { image: string }) {
           </p>
           <div data-hero="fade" className="mt-10 flex flex-wrap gap-3">
             <ButtonLink to={path('collections')}>
-              {hero.primary} <ArrowRight className="size-4" aria-hidden="true" />
+              {hero.primaryCta} <ArrowRight className="size-4" aria-hidden="true" />
             </ButtonLink>
             <ButtonLink
               to={path('about')}
               variant="secondary"
               className="bg-canvas/40 backdrop-blur"
             >
-              {hero.secondary}
+              {hero.secondaryCta}
             </ButtonLink>
           </div>
         </div>

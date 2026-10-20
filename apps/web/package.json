@@ -16,6 +16,7 @@
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
     "@fontsource-variable/geist": "^5.3.0",
     "@gsap/react": "^2.1.2",
+    "@karar-hali/shared": "workspace:*",
     "clsx": "^2.1.1",
     "gsap": "^3.15.0",
     "lenis": "^1.3.27",
@@ -27,6 +28,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@karar-hali/api": "workspace:*",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",

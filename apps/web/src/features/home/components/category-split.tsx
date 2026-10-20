@@ -1,3 +1,4 @@
+import type { PublicContent } from '@karar-hali/shared'
 import { ArrowUpRight } from 'lucide-react'
 import { useRef } from 'react'
 import { Link } from 'react-router'
@@ -8,14 +9,9 @@ import { gsap, useGSAP } from '@/lib/motion/gsap'
 import { useReducedMotion } from '@/lib/motion/use-media-query'
 import { useTilt } from '@/lib/motion/pointer-effects'
 
-interface CategorySplitProps {
-  images: { carpets: string; rolls: string }
-}
-
 /** Halı / rulo kesim ana gruplarına giriş kartları (kaydırmaya bağlı dikey parallax). */
-export function CategorySplit({ images }: CategorySplitProps) {
+export function CategorySplit({ content: labels }: { content: PublicContent['home.categories'] }) {
   const { t, path } = useI18n()
-  const labels = t.home.categories
   const reduced = useReducedMotion()
   const scope = useRef<HTMLDivElement>(null)
   const tilt = useTilt<HTMLAnchorElement>(3)
@@ -42,13 +38,13 @@ export function CategorySplit({ images }: CategorySplitProps) {
     {
       title: labels.carpetsTitle,
       text: labels.carpetsText,
-      image: images.carpets,
+      image: labels.carpetsImage,
       to: `${path('collections')}?category=carpet`,
     },
     {
       title: labels.rollsTitle,
       text: labels.rollsText,
-      image: images.rolls,
+      image: labels.rollsImage,
       to: `${path('collections')}?category=roll`,
     },
   ]

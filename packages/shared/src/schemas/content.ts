@@ -97,3 +97,10 @@ export type ContentBlock<K extends ContentKey> = z.infer<(typeof contentBlockSch
 /** Tek dile indirgenmiş blok verisi */
 export type LocalizedContent<K extends ContentKey> = ContentBlock<K>['tr']
 export type PublicContent = { [K in ContentKey]: LocalizedContent<K> }
+
+/** GET /site yanıtı. İçerikte yalnızca kaydı olan bloklar bulunur (seed hepsini oluşturur). */
+export interface SiteResponse {
+  locale: 'tr' | 'en'
+  settings: import('./settings').PublicSiteSettings
+  content: Partial<PublicContent>
+}

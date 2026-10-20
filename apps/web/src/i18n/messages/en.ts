@@ -1,12 +1,8 @@
 import type { Messages } from './tr'
 
-// UI copy (English). Must match the structure of tr.ts exactly.
+// UI labels (English). Must match the structure of tr.ts exactly.
+// Page content and company details come from the API, not from here.
 export const en: Messages = {
-  meta: {
-    tagline: 'Decide with confidence',
-    description:
-      'Karar Halı is an established home textile manufacturer producing original carpet and roll-cut carpet collections in Gaziantep since 1966.',
-  },
   nav: {
     home: 'Home',
     about: 'About',
@@ -35,88 +31,14 @@ export const en: Messages = {
     contact: 'Contact',
     follow: 'Follow us',
     rights: 'All rights reserved.',
-    demo: 'This site is a design demo. Logo and product images are taken from kararhali.com.',
-  },
-  contactInfo: {
-    address:
-      '3rd Organized Industrial Zone, 83302 Street No: 2, 27120 Başpınar / Gaziantep, Türkiye',
-    hours: 'Monday – Saturday, 08:30 – 18:00 (GMT+3)',
   },
   home: {
-    hero: {
-      eyebrow: 'Gaziantep · Since 1966',
-      title: 'Decide with confidence.',
-      titleAccent: 'confidence.',
-      text: 'The right carpet completely changes the feel of a home. With our modern, elegant and grand collections, we make a carpet for every space.',
-      primary: 'Explore collections',
-      secondary: 'Our story',
-      imageAlt: 'A living room featuring a Karar Halı carpet',
-    },
-    featured: {
-      eyebrow: 'Featured',
-      title: 'This season’s favourite collections',
-      titleAccent: 'favourite',
-      description: 'The most popular designs from our carpet and roll-cut series.',
-      cta: 'All collections',
-    },
-    categories: {
-      carpetsTitle: 'Carpet collections',
-      carpetsText: 'Our modern, elegant and grand carpet designs are waiting for your living room.',
-      rollsTitle: 'Roll-cut collections',
-      rollsText: 'From hallways to kitchens, cut to the length you need for every room.',
-      cta: 'Browse',
-    },
-    story: {
-      eyebrow: 'Production story',
-      title: 'From yarn to carpet, under one roof.',
-      titleAccent: 'carpet',
-      text: 'Original patterns created by our design team are woven knot by knot on state-of-the-art looms and quality-checked at every stage.',
-      cta: 'Our production process',
-      step: (current, total) => `Step ${current} / ${total}`,
-    },
-    values: {
-      eyebrow: 'Why Karar Halı',
-      title: 'Sixty years of know-how, today’s design',
-      titleAccent: 'Sixty years',
-    },
-  },
-  cta: {
-    title: 'Partner with us for dealership and wholesale.',
-    text: 'Contact our sales team for information on our collections, stock availability and dealership terms.',
-    button: 'Request a quote',
+    storyStep: (current, total) => `Step ${current} / ${total}`,
   },
   about: {
-    metaDescription: 'Karar Halı since 1966: our story, business plan and vision.',
-    eyebrow: 'About us',
-    title: 'Since 1966, an established name in home textiles.',
-    titleAccent: '1966',
-    description:
-      'In Gaziantep, we produce carpets in original colours and patterns using the latest technology and the finest materials.',
-    storyEyebrow: 'Our story',
-    storyTitle: 'Sixty years of textile experience',
-    story: [
-      'Active in the textile industry since 1966, our company produces carpets in Gaziantep as a home textile manufacturer for end users.',
-      'We use the latest technology and the finest materials, and bring our products in original colours and patterns to customers through an effective distribution network.',
-      'Our in-house design team creates unique patterns that we weave into carpets with modern techniques, offering products for every taste.',
-    ],
-    pillarsEyebrow: 'Our principles',
-    pillarsTitle: 'The values that define us',
-    valuesEyebrow: 'Our strengths',
-    valuesTitle: 'Why Karar Halı',
-    fairsEyebrow: 'Trade fairs',
-    fairsTitle: 'Where the industry meets',
-    fairsText:
-      'We present our new collections to business partners at trade fairs in Türkiye and abroad.',
     fairAlt: (index) => `A view from our trade fair stand (${index})`,
   },
   collections: {
-    metaDescription:
-      'Explore Karar Halı carpet and roll-cut collections with their models and sizes.',
-    eyebrow: 'Collections',
-    title: 'A Karar for every space',
-    titleAccent: 'every space',
-    description:
-      'Browse our collections in two main groups, carpets and roll-cut, and explore the models and colour options of each.',
     filterLabel: 'Filter by category',
     all: 'All',
     empty: 'There are no collections in this category yet.',
@@ -153,28 +75,7 @@ export const en: Messages = {
     note: 'Product colours may vary depending on your screen settings.',
     zoomHint: 'Hover over or click the image for a closer look.',
   },
-  production: {
-    metaDescription: 'Karar Halı’s carpet production process, from design to shipping.',
-    eyebrow: 'Production',
-    title: 'From design to shipping, a controlled process.',
-    titleAccent: 'controlled',
-    description:
-      'At our facility in the Gaziantep 3rd Organized Industrial Zone, our own teams manage every stage of our carpets.',
-    processEyebrow: 'Process',
-    processTitle: 'A carpet’s journey',
-    processDescription:
-      'Every product is checked against measurable quality criteria before moving on to the next stage.',
-    typesEyebrow: 'Product groups',
-    typesTitle: 'Carpets and roll-cut',
-    carpetsText: 'Living room and bedroom carpets in standard sizes (160 × 230, 200 × 290 cm).',
-    rollsText: 'Roll carpets in widths from 80 cm to 300 cm, cut to the length you need.',
-    imageAlt: 'Yarn spool',
-  },
   contact: {
-    metaDescription: 'Contact Karar Halı for dealership, wholesale and product information.',
-    eyebrow: 'Contact',
-    title: 'Get in touch.',
-    description: 'Fill in the form or give us a call so we can serve you better.',
     info: {
       address: 'Address',
       phone: 'Phone',
@@ -190,6 +91,7 @@ export const en: Messages = {
       message: 'Your message',
       submit: 'Send Message',
       sending: 'Sending…',
+      honeypot: 'Leave this field empty',
     },
     subjects: {
       dealership: 'Dealership',
@@ -202,10 +104,13 @@ export const en: Messages = {
       email: 'Please enter a valid email address.',
       message: 'Your message must be at least 10 characters.',
     },
+    errors: {
+      tooMany: 'Too many messages were sent in a short time. Please try again in a few minutes.',
+      generic: 'Your message could not be sent. Please try again or give us a call.',
+    },
     success: {
       title: 'Message received',
       text: 'Thank you. Our sales team will contact you shortly.',
-      note: 'Note: This is a demo site; the form is not actually sent anywhere.',
     },
   },
   notFound: {
@@ -216,5 +121,8 @@ export const en: Messages = {
   error: {
     title: 'Something went wrong',
     text: 'Please refresh the page or try again later.',
+    unavailable: 'The site cannot be loaded right now',
+    unavailableText: 'We could not reach the server. Please try again in a few minutes.',
+    retry: 'Try again',
   },
 }

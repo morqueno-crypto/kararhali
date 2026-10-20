@@ -2,16 +2,18 @@ import { Clock, Mail, MapPin, Phone, Printer } from 'lucide-react'
 import { Container } from '@/components/ui/container'
 import { PageHero } from '@/components/ui/page-hero'
 import { PageMeta } from '@/components/ui/page-meta'
-import { siteConfig } from '@/config/site'
 import { ContactForm } from '@/features/contact'
 import { useI18n } from '@/i18n'
+import { useSite } from '@/site'
 
 export function ContactPage() {
   const { t } = useI18n()
-  const { contact } = siteConfig
+  const { settings, content } = useSite()
+  const { contact } = settings
+  const page = content['contact.page']
   const labels = t.contact.info
   const items = [
-    { icon: MapPin, label: labels.address, value: t.contactInfo.address },
+    { icon: MapPin, label: labels.address, value: contact.address },
     {
       icon: Phone,
       label: labels.phone,
@@ -20,17 +22,13 @@ export function ContactPage() {
     },
     { icon: Printer, label: labels.fax, value: contact.fax },
     { icon: Mail, label: labels.email, value: contact.email, href: `mailto:${contact.email}` },
-    { icon: Clock, label: labels.hours, value: t.contactInfo.hours },
-  ]
+    { icon: Clock, label: labels.hours, value: contact.hours },
+  ].filter((item) => item.value) // panelde boş bırakılan alanlar (ör. faks) gösterilmez
 
   return (
     <>
-      <PageMeta title={t.nav.contact} description={t.contact.metaDescription} />
-      <PageHero
-        eyebrow={t.contact.eyebrow}
-        title={t.contact.title}
-        description={t.contact.description}
-      />
+      <PageMeta title={t.nav.contact} description={page.description} />
+      <PageHero eyebrow={page.eyebrow} title={page.title} description={page.description} />
 
       <section className="py-16 sm:py-24">
         <Container className="grid gap-10 lg:grid-cols-12">

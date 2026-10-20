@@ -3,10 +3,12 @@ import { ButtonLink } from '@/components/ui/button-link'
 import { Container } from '@/components/ui/container'
 import { Reveal } from '@/components/ui/reveal'
 import { useI18n } from '@/i18n'
+import { useContent } from '@/site'
 
-/** Sayfa sonlarındaki teklif çağrısı (GSAP'sız; tüm sayfalarda kullanılabilir). */
+/** Sayfa sonlarındaki teklif çağrısı (metinler panelden: "cta" bloğu). GSAP'sızdır. */
 export function CtaSection() {
-  const { t, path } = useI18n()
+  const { path } = useI18n()
+  const cta = useContent('cta')
 
   return (
     <section className="py-20 sm:py-28">
@@ -20,10 +22,10 @@ export function CtaSection() {
             aria-hidden="true"
           />
           <div className="max-w-2xl">
-            <h2 className="text-3xl font-semibold text-ink sm:text-5xl">{t.cta.title}</h2>
-            <p className="mt-5 text-lg text-muted">{t.cta.text}</p>
+            <h2 className="text-3xl font-semibold text-ink sm:text-5xl">{cta.title}</h2>
+            <p className="mt-5 text-lg text-muted">{cta.text}</p>
             <ButtonLink to={path('contact')} className="mt-10">
-              {t.cta.button} <ArrowRight className="size-4" aria-hidden="true" />
+              {cta.button} <ArrowRight className="size-4" aria-hidden="true" />
             </ButtonLink>
           </div>
         </Reveal>

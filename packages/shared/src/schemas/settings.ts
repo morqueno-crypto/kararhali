@@ -31,3 +31,23 @@ export type SettingKey = keyof typeof settingSchemas
 export const settingKeys = Object.keys(settingSchemas) as SettingKey[]
 export const settingKeySchema = z.enum(settingKeys as [SettingKey, ...SettingKey[]])
 export type Settings = { [K in SettingKey]: z.infer<(typeof settingSchemas)[K]> }
+
+/** /site yanıtındaki ayarlar: çok dilli alanlar tek dile indirgenmiş. Kaydı olmayan grup null döner. */
+export interface PublicSiteSettings {
+  general: {
+    siteName: string
+    logo: string
+    tagline: string
+    description: string
+    dealerLoginUrl: string
+  } | null
+  contact: {
+    phone: string
+    phoneLines: string
+    fax: string
+    email: string
+    address: string
+    hours: string
+  } | null
+  social: Settings['social'] | null
+}

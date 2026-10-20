@@ -1,4 +1,10 @@
-import { settingSchemas, type Locale, type SettingKey, type Settings } from '@karar-hali/shared'
+import {
+  settingSchemas,
+  type Locale,
+  type PublicSiteSettings,
+  type SettingKey,
+  type Settings,
+} from '@karar-hali/shared'
 import { z } from 'zod'
 import type { Database } from '../db/client'
 import { settings } from '../db/schema'
@@ -19,7 +25,7 @@ export async function getAllSettings(db: Database): Promise<Partial<Settings>> {
 }
 
 /** Sitenin ihtiyaç duyduğu ayarlar, tek dile indirgenmiş olarak. */
-export async function getPublicSettings(db: Database, locale: Locale) {
+export async function getPublicSettings(db: Database, locale: Locale): Promise<PublicSiteSettings> {
   const all = await getAllSettings(db)
   return {
     general: all.general
@@ -44,5 +50,3 @@ export async function getPublicSettings(db: Database, locale: Locale) {
     social: all.social ?? null,
   }
 }
-
-export type PublicSettings = Awaited<ReturnType<typeof getPublicSettings>>

@@ -20,6 +20,13 @@ export default defineConfig({
       '/uploads': 'http://localhost:3000',
     },
   },
+  // `pnpm preview` (derlenmiş site) de aynı şekilde API'ye bağlanır.
+  preview: {
+    proxy: {
+      '/api': 'http://localhost:3000',
+      '/uploads': 'http://localhost:3000',
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,
