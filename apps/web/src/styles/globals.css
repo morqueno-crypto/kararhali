@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+
+  /* Zemin: yün / keten tonları */
+  --color-cream-50: oklch(0.985 0.007 85);
+  --color-cream-100: oklch(0.965 0.014 82);
+  --color-cream-200: oklch(0.925 0.024 78);
+  --color-cream-300: oklch(0.87 0.035 74);
+
+  /* Metin: koyu toprak */
+  --color-ink-950: oklch(0.18 0.015 50);
+  --color-ink-900: oklch(0.24 0.018 50);
+  --color-ink-700: oklch(0.38 0.02 52);
+  --color-ink-500: oklch(0.54 0.02 55);
+  --color-ink-300: oklch(0.72 0.018 60);
+
+  /* Vurgu: kök boya kırmızısı */
+  --color-madder-400: oklch(0.62 0.14 38);
+  --color-madder-500: oklch(0.54 0.15 35);
+  --color-madder-600: oklch(0.47 0.14 33);
+  --color-madder-700: oklch(0.39 0.12 30);
+
+  /* İkincil: indigo */
+  --color-indigo-600: oklch(0.38 0.08 260);
+  --color-indigo-800: oklch(0.27 0.06 262);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream-50 font-sans text-ink-900;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight text-balance;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-madder-500;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
