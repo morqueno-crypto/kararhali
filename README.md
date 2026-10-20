@@ -1,6 +1,6 @@
-# Lumen Halı
+# Karar Halı
 
-Modern bir halı üretim fabrikası için kurumsal tanıtım sitesi. **Demo projedir:** firma ve tüm içerikler kurgusaldır, backend yoktur.
+Modern bir halı üretim fabrikası için iki dilli (Türkçe / İngilizce) kurumsal tanıtım sitesi. **Demo projedir:** firma ve tüm içerikler kurgusaldır, backend yoktur.
 
 ## Gereksinimler
 
@@ -14,7 +14,7 @@ pnpm install
 pnpm dev
 ```
 
-Site http://localhost:5173 adresinde açılır.
+Site http://localhost:5173 adresinde açılır ve tarayıcı diline göre `/tr` veya `/en` adresine yönlendirir.
 
 ## Komutlar
 
@@ -35,7 +35,7 @@ apps/web     → Statik frontend (Vite + React + TS + Tailwind v4 + React Router
 packages/    → İleride ortak paketler (ui, shared tipler)
 ```
 
-Sayfalar: Ana sayfa, Kurumsal, Koleksiyonlar (filtre + detay), Üretim, İletişim (demo form), 404.
+Sayfalar: Ana sayfa, Kurumsal, Koleksiyonlar (filtre + detay), Üretim, İletişim (demo form), 404. Her sayfa Türkçe ve İngilizce mevcuttur (ör. `/tr/kurumsal` ↔ `/en/about`).
 
 ## Dağıtım
 

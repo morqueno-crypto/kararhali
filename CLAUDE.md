@@ -1,6 +1,6 @@
-# Lumen Halı — proje kuralları
+# Karar Halı — proje kuralları
 
-Modern halı üretim fabrikası için kurumsal tanıtım sitesi (demo). Şu an backend yok; tüm içerik `apps/web/src/data/` altında statik ve örnektir.
+Modern halı üretim fabrikası için iki dilli (Türkçe / İngilizce) kurumsal tanıtım sitesi (demo). Şu an backend yok; tüm içerik `apps/web/src/data/` altında statik ve örnektir.
 
 ## Teknoloji yığını
 
@@ -19,6 +19,7 @@ Modern halı üretim fabrikası için kurumsal tanıtım sitesi (demo). Şu an b
 ## Klasör yapısı (`apps/web/src`)
 
 - `app/`: router, provider'lar, layout'lar
+- `i18n/`: dil ayarları (`config.ts`), dile göre URL parçaları (`routes.ts`), arayüz metinleri (`messages/tr.ts`, `messages/en.ts`), `useI18n` / `useAlternatePaths` hook'ları
 - `pages/`: route sayfaları (ince) + `*-loader.ts` dosyaları (loader'lar ayrı dosyada, Fast Refresh için)
 - `features/<ad>/`: özellik modülleri; dışarıya yalnızca `index.ts` üzerinden açılır
 - `components/ui`, `components/layout`: paylaşılan bileşenler
@@ -38,6 +39,17 @@ Modern halı üretim fabrikası için kurumsal tanıtım sitesi (demo). Şu an b
 8. Stil Tailwind utility'leriyle yazılır; renk ve font token'ları `@theme` içindedir; sınıflar `cn()` ile birleştirilir.
 9. Semantik HTML ve erişilebilirlik (alt, aria, label); sayfa başlıkları `PageMeta` ile verilir.
 10. TypeScript strict; `any` kullanılmaz.
+
+## Çok dillilik (i18n)
+
+- URL dil önekli: `/tr/...` ve `/en/...`. Sayfa yolları dile göre değişir (`/tr/kurumsal` ↔ `/en/about`); tanımları `i18n/routes.ts` içindeki `pageSegments`'te.
+- `/` adresi tarayıcı diline göre yönlendirir: Türkçe ise `/tr`, değilse `/en`. Dil öneki olmayan adresler `/tr/...`'ye yönlendirilir.
+- Bileşenlerde sabit metin yazılmaz. Metinler `const { t, path } = useI18n()` ile alınır. Linkler `path('about')` veya `path('collectionDetail', { slug })` ile üretilir; `/tr/...` elle yazılmaz.
+- Yeni metin önce `messages/tr.ts`'e, sonra aynı anahtarla `messages/en.ts`'e eklenir. `en` dosyası `Messages` tipini uyguladığı için eksik anahtar derleme hatası verir.
+- İçerik verisi `Localized<T>` (`{ tr, en }`) alanlarıyla tutulur. Servisler `locale` parametresi alır ve tek dile çevrilmiş veri döner.
+- Her route'un `handle: { page }` alanı vardır. Dil seçici ve hreflang etiketleri, aynı sayfanın diğer dildeki adresini buradan bulur.
+- Yeni sayfa eklerken: `pageSegments`'e ekle, `messages`'e `nav` metnini ekle, `router.tsx`'teki `localeRoutes` içine `handle` ile tanımla.
+- Yeni dil eklerken: `config.ts`'teki `locales` listesine ekle, `messages/<dil>.ts` dosyasını oluştur, `pageSegments` ve `Localized` verilere o dilin karşılığını ekle.
 
 ## Backend eklenince
 

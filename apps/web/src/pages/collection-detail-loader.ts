@@ -1,10 +1,13 @@
 import type { LoaderFunctionArgs } from 'react-router'
+import type { Locale } from '@/i18n'
 import { getCollectionBySlug, getCollections } from '@/services/collections'
 
-export async function collectionDetailLoader({ params }: LoaderFunctionArgs) {
-  const collection = params.slug ? await getCollectionBySlug(params.slug) : undefined
-  if (!collection) throw new Response('Koleksiyon bulunamadı', { status: 404 })
+export async function collectionDetailLoader({ params }: LoaderFunctionArgs, locale: Locale) {
+  const collection = params.slug ? await getCollectionBySlug(params.slug, locale) : undefined
+  if (!collection) throw new Response('Not Found', { status: 404 })
 
-  const others = (await getCollections()).filter((c) => c.slug !== collection.slug).slice(0, 3)
+  const others = (await getCollections(locale))
+    .filter((c) => c.slug !== collection.slug)
+    .slice(0, 3)
   return { collection, others }
 }

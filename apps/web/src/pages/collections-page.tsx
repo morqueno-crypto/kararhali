@@ -3,21 +3,20 @@ import { Container } from '@/components/ui/container'
 import { PageHero } from '@/components/ui/page-hero'
 import { PageMeta } from '@/components/ui/page-meta'
 import { CollectionBrowser } from '@/features/collections'
+import { useI18n } from '@/i18n'
 import type { collectionsLoader } from './collections-loader'
 
 export function CollectionsPage() {
   const { collections } = useLoaderData<typeof collectionsLoader>()
+  const { t } = useI18n()
 
   return (
     <>
-      <PageMeta
-        title="Koleksiyonlar"
-        description="Klasik, modern, kilim ve dış mekân halı koleksiyonlarımızı keşfedin."
-      />
+      <PageMeta title={t.nav.collections} description={t.collections.metaDescription} />
       <PageHero
-        eyebrow="Koleksiyonlar"
-        title="Desen, doku ve renk zenginliği"
-        description="Her koleksiyon kendi tasarım stüdyomuzda geliştirilir ve tesisimizde üretilir. Özel ölçü ve renk talepleri için bize ulaşın."
+        eyebrow={t.collections.eyebrow}
+        title={t.collections.title}
+        description={t.collections.description}
       />
       <section className="py-16 sm:py-20">
         <Container>

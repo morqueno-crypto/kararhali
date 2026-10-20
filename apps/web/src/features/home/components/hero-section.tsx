@@ -2,9 +2,12 @@ import { ArrowRight } from 'lucide-react'
 import { ButtonLink } from '@/components/ui/button-link'
 import { Container } from '@/components/ui/container'
 import { CarpetSwatch } from '@/features/collections'
+import { useI18n } from '@/i18n'
 import type { Collection } from '@/types/collection'
 
 export function HeroSection({ showcase }: { showcase: Collection[] }) {
+  const { t, path } = useI18n()
+  const { hero } = t.home
   const [first, second, third] = showcase
 
   return (
@@ -12,21 +15,19 @@ export function HeroSection({ showcase }: { showcase: Collection[] }) {
       <Container className="grid items-center gap-16 py-16 sm:py-24 lg:grid-cols-2 lg:py-28">
         <div>
           <p className="text-xs font-semibold tracking-[0.2em] text-madder-600 uppercase">
-            1987’den beri halı üretimi
+            {hero.eyebrow}
           </p>
           <h1 className="mt-5 text-5xl leading-[1.05] font-medium text-ink-950 sm:text-6xl lg:text-7xl">
-            İlmek ilmek, <em className="text-madder-600 not-italic">modern</em> zanaat.
+            {hero.titleStart} <em className="text-madder-600 not-italic">{hero.titleAccent}</em>{' '}
+            {hero.titleEnd}
           </h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-700">
-            Tasarımdan dokumaya, kalite kontrolden sevkiyata kadar tüm süreci kendi tesislerimizde
-            yönetiyor; 40’ı aşkın ülkeye ev, otel ve ofis halısı üretiyoruz.
-          </p>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-700">{hero.text}</p>
           <div className="mt-10 flex flex-wrap gap-4">
-            <ButtonLink to="/koleksiyonlar">
-              Koleksiyonları keşfedin <ArrowRight className="size-4" aria-hidden="true" />
+            <ButtonLink to={path('collections')}>
+              {hero.primary} <ArrowRight className="size-4" aria-hidden="true" />
             </ButtonLink>
-            <ButtonLink to="/uretim" variant="secondary">
-              Üretim tesisimiz
+            <ButtonLink to={path('production')} variant="secondary">
+              {hero.secondary}
             </ButtonLink>
           </div>
         </div>
@@ -54,7 +55,7 @@ export function HeroSection({ showcase }: { showcase: Collection[] }) {
             <CarpetSwatch
               pattern={first.pattern}
               palette={first.palette}
-              title={`${first.name} koleksiyonu`}
+              title={hero.swatchTitle(first.name)}
               className="relative w-52 rotate-2 sm:w-64"
             />
           )}

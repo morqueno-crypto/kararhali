@@ -5,16 +5,20 @@ import { Container } from '@/components/ui/container'
 import { PageMeta } from '@/components/ui/page-meta'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { CarpetSwatch, CollectionCard } from '@/features/collections'
+import { useI18n } from '@/i18n'
 import type { collectionDetailLoader } from './collection-detail-loader'
 
 export function CollectionDetailPage() {
   const { collection, others } = useLoaderData<typeof collectionDetailLoader>()
+  const { t, path } = useI18n()
+  const labels = t.collectionDetail
+  const category = t.collections.categories[collection.category]
 
   const specs = [
-    { label: 'Kategori', value: collection.category },
-    { label: 'Malzeme', value: collection.material },
-    { label: 'Hav yüksekliği', value: collection.pileHeight },
-    { label: 'Teknik', value: collection.technique },
+    { label: labels.specs.category, value: category },
+    { label: labels.specs.material, value: collection.material },
+    { label: labels.specs.pileHeight, value: collection.pileHeight },
+    { label: labels.specs.technique, value: collection.technique },
   ]
 
   return (
@@ -24,10 +28,10 @@ export function CollectionDetailPage() {
       <section className="bg-cream-100">
         <Container className="py-10">
           <Link
-            to="/koleksiyonlar"
+            to={path('collections')}
             className="inline-flex items-center gap-2 text-sm font-medium text-ink-700 hover:text-madder-600"
           >
-            <ArrowLeft className="size-4" aria-hidden="true" /> Tüm koleksiyonlar
+            <ArrowLeft className="size-4" aria-hidden="true" /> {labels.back}
           </Link>
         </Container>
         <Container className="grid items-center gap-12 pb-20 lg:grid-cols-2">
@@ -35,13 +39,13 @@ export function CollectionDetailPage() {
             <CarpetSwatch
               pattern={collection.pattern}
               palette={collection.palette}
-              title={`${collection.name} halı deseni`}
+              title={labels.swatchTitle(collection.name)}
               className="max-w-xs"
             />
           </div>
           <div>
             <p className="text-xs font-semibold tracking-[0.2em] text-madder-600 uppercase">
-              {collection.category} koleksiyonu
+              {labels.collectionOf(category)}
             </p>
             <h1 className="mt-3 text-4xl font-medium text-ink-950 sm:text-5xl">
               {collection.name}
@@ -57,7 +61,7 @@ export function CollectionDetailPage() {
               ))}
             </dl>
 
-            <h2 className="mt-8 font-sans text-sm font-semibold text-ink-900">Standart ölçüler</h2>
+            <h2 className="mt-8 font-sans text-sm font-semibold text-ink-900">{labels.sizes}</h2>
             <ul className="mt-3 flex flex-wrap gap-2">
               {collection.sizes.map((size) => (
                 <li
@@ -78,8 +82,8 @@ export function CollectionDetailPage() {
               ))}
             </ul>
 
-            <ButtonLink to="/iletisim" className="mt-10">
-              Bu koleksiyon için teklif alın
+            <ButtonLink to={path('contact')} className="mt-10">
+              {labels.cta}
             </ButtonLink>
           </div>
         </Container>
@@ -87,7 +91,7 @@ export function CollectionDetailPage() {
 
       <section className="py-20">
         <Container>
-          <SectionHeading eyebrow="Keşfetmeye devam edin" title="Diğer koleksiyonlar" />
+          <SectionHeading eyebrow={labels.othersEyebrow} title={labels.othersTitle} />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {others.map((other) => (
               <CollectionCard key={other.slug} collection={other} />

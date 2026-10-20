@@ -1,14 +1,27 @@
 import { z } from 'zod'
 
-export const contactSchema = z.object({
-  name: z.string().trim().min(2, 'Lütfen adınızı girin.'),
-  email: z.email('Geçerli bir e-posta adresi girin.'),
-  company: z.string().trim().optional(),
-  subject: z.enum(['Bayilik', 'İhracat', 'Proje / Otel', 'Diğer']),
-  message: z.string().trim().min(10, 'Mesajınız en az 10 karakter olmalı.'),
-})
+export const contactSubjects = ['dealership', 'export', 'project', 'other'] as const
 
-export type ContactInput = z.infer<typeof contactSchema>
+export type ContactSubject = (typeof contactSubjects)[number]
+
+interface ValidationMessages {
+  name: string
+  email: string
+  message: string
+}
+
+/** Hata mesajları dile göre verildiği için şema bir fabrika fonksiyonuyla üretilir. */
+export function createContactSchema(errors: ValidationMessages) {
+  return z.object({
+    name: z.string().trim().min(2, errors.name),
+    email: z.email(errors.email),
+    company: z.string().trim().optional(),
+    subject: z.enum(contactSubjects),
+    message: z.string().trim().min(10, errors.message),
+  })
+}
+
+export type ContactInput = z.infer<ReturnType<typeof createContactSchema>>
 
 // Demo: backend olmadığı için gönderim simüle edilir.
 // Backend gelince: return http<void>('/api/contact', { method: 'POST', body: JSON.stringify(input) })

@@ -10,30 +10,59 @@ function renderRoute(path: string) {
 }
 
 describe('router', () => {
-  it('ana sayfayı render eder', async () => {
-    renderRoute('/')
+  it('Türkçe ana sayfayı render eder', async () => {
+    renderRoute('/tr')
     expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent('İlmek ilmek')
   })
 
-  it('koleksiyon detayını render eder', async () => {
-    renderRoute('/koleksiyonlar/anadolu-miras')
+  it('İngilizce ana sayfayı render eder', async () => {
+    renderRoute('/en')
+    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent('Knot by knot')
+  })
+
+  it('kök adresi tarayıcı diline göre yönlendirir', async () => {
+    const router = renderRoute('/')
+    const expected = navigator.language.toLowerCase().startsWith('tr') ? '/tr' : '/en'
+    await waitFor(() => expect(router.state.location.pathname).toBe(expected))
+  })
+
+  it('dil öneki olmayan adresi varsayılan dile yönlendirir', async () => {
+    const router = renderRoute('/kurumsal')
+    await waitFor(() => expect(router.state.location.pathname).toBe('/tr/kurumsal'))
+  })
+
+  it('koleksiyon detayını dile göre render eder', async () => {
+    renderRoute('/en/collections/anadolu-miras')
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Anadolu Miras' }),
+      await screen.findByRole('heading', { level: 1, name: 'Anatolian Heritage' }),
+    ).toBeInTheDocument()
+  })
+
+  it('dil değiştirince aynı sayfanın karşılığına gider', async () => {
+    const router = renderRoute('/tr/koleksiyonlar/anadolu-miras')
+    const user = userEvent.setup()
+    await screen.findByRole('heading', { level: 1, name: 'Anadolu Miras' })
+    await user.click(screen.getAllByRole('link', { name: 'English' })[0])
+    await waitFor(() =>
+      expect(router.state.location.pathname).toBe('/en/collections/anadolu-miras'),
+    )
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Anatolian Heritage' }),
     ).toBeInTheDocument()
   })
 
   it('bilinmeyen koleksiyon için 404 gösterir', async () => {
-    renderRoute('/koleksiyonlar/olmayan')
+    renderRoute('/tr/koleksiyonlar/olmayan')
     expect(await screen.findByText('404')).toBeInTheDocument()
   })
 
   it('bilinmeyen route için 404 gösterir', async () => {
-    renderRoute('/olmayan-sayfa')
-    expect(await screen.findByText('404')).toBeInTheDocument()
+    renderRoute('/en/missing-page')
+    expect(await screen.findByText('Page not found', { selector: 'h1' })).toBeInTheDocument()
   })
 
   it('koleksiyonları kategoriye göre filtreler', async () => {
-    renderRoute('/koleksiyonlar')
+    renderRoute('/tr/koleksiyonlar')
     const user = userEvent.setup()
     await user.click(await screen.findByRole('button', { name: 'Kilim' }))
     // Filtre URL'yi günceller; navigasyon asenkron tamamlanır.

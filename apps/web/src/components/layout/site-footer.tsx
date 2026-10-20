@@ -3,10 +3,12 @@ import { Link } from 'react-router'
 import { Container } from '@/components/ui/container'
 import { Logo } from '@/components/ui/logo'
 import { siteConfig } from '@/config/site'
+import { useI18n } from '@/i18n'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
 export function SiteFooter() {
+  const { t, path } = useI18n()
   const { contact } = siteConfig
 
   return (
@@ -20,19 +22,19 @@ export function SiteFooter() {
             </span>
           </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-cream-300">
-            {siteConfig.description}
+            {t.meta.description}
           </p>
         </div>
 
         <div className="md:col-span-3">
           <h2 className="font-sans text-sm font-semibold tracking-wider text-cream-50 uppercase">
-            Sayfalar
+            {t.footer.pages}
           </h2>
           <ul className="mt-4 space-y-3 text-sm">
-            {siteConfig.nav.map((item) => (
-              <li key={item.to}>
-                <Link to={item.to} className="hover:text-cream-50">
-                  {item.label}
+            {siteConfig.nav.map((page) => (
+              <li key={page}>
+                <Link to={path(page)} className="hover:text-cream-50">
+                  {t.nav[page]}
                 </Link>
               </li>
             ))}
@@ -41,12 +43,12 @@ export function SiteFooter() {
 
         <div className="md:col-span-4">
           <h2 className="font-sans text-sm font-semibold tracking-wider text-cream-50 uppercase">
-            İletişim
+            {t.footer.contact}
           </h2>
           <ul className="mt-4 space-y-3 text-sm">
             <li className="flex gap-3">
               <MapPin className="mt-0.5 size-4 shrink-0 text-madder-400" aria-hidden="true" />
-              {contact.address}
+              {t.contactInfo.address}
             </li>
             <li className="flex gap-3">
               <Phone className="mt-0.5 size-4 shrink-0 text-madder-400" aria-hidden="true" />
@@ -70,9 +72,9 @@ export function SiteFooter() {
       <div className="border-t border-cream-50/10">
         <Container className="flex flex-col gap-2 py-6 text-xs text-cream-300 sm:flex-row sm:justify-between">
           <p>
-            © {CURRENT_YEAR} {siteConfig.name}. Tüm hakları saklıdır.
+            © {CURRENT_YEAR} {siteConfig.name}. {t.footer.rights}
           </p>
-          <p>Bu site tanıtım amaçlı bir demodur; içerikler örnektir.</p>
+          <p>{t.footer.demo}</p>
         </Container>
       </div>
     </footer>

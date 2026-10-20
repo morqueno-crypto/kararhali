@@ -7,29 +7,29 @@ import { SectionHeading } from '@/components/ui/section-heading'
 import { StatGrid } from '@/components/ui/stat-grid'
 import { CtaSection } from '@/features/home'
 import { ProcessSteps } from '@/features/production'
+import { useI18n } from '@/i18n'
 import type { productionLoader } from './production-loader'
 
 export function ProductionPage() {
   const { steps, highlights, certifications } = useLoaderData<typeof productionLoader>()
+  const { t } = useI18n()
+  const { production } = t
 
   return (
     <>
-      <PageMeta
-        title="Üretim"
-        description="Entegre halı üretim tesisimiz, altı aşamalı üretim sürecimiz ve sertifikalarımız."
-      />
+      <PageMeta title={t.nav.production} description={production.metaDescription} />
       <PageHero
-        eyebrow="Üretim"
-        title="Entegre tesis, kontrollü süreç."
-        description="İplik boyamadan paketlemeye kadar her adım, Gaziantep Organize Sanayi Bölgesi’ndeki tesisimizde kendi ekiplerimizce yürütülür."
+        eyebrow={production.eyebrow}
+        title={production.title}
+        description={production.description}
       />
 
       <section className="py-20 sm:py-28">
         <Container>
           <SectionHeading
-            eyebrow="Süreç"
-            title="Altı adımda bir halının yolculuğu"
-            description="Her aşamada ölçülebilir kalite kriterleri uygulanır; ürünler bir sonraki aşamaya ancak bu kontrollerden geçtikten sonra ilerler."
+            eyebrow={production.processEyebrow}
+            title={production.processTitle}
+            description={production.processDescription}
           />
           <ProcessSteps steps={steps} className="mt-12" />
         </Container>
@@ -37,7 +37,11 @@ export function ProductionPage() {
 
       <section className="bg-ink-950 py-20 sm:py-24">
         <Container>
-          <SectionHeading tone="light" eyebrow="Tesis" title="Rakamlarla üretim gücümüz" />
+          <SectionHeading
+            tone="light"
+            eyebrow={production.facilityEyebrow}
+            title={production.facilityTitle}
+          />
           <StatGrid items={highlights} tone="light" className="mt-12" />
         </Container>
       </section>
@@ -45,9 +49,9 @@ export function ProductionPage() {
       <section className="py-20 sm:py-28">
         <Container className="grid gap-12 lg:grid-cols-2">
           <SectionHeading
-            eyebrow="Kalite ve sürdürülebilirlik"
-            title="Sertifikalarımız"
-            description="Uluslararası standartlara uygun üretim yapıyor, süreçlerimizi düzenli olarak bağımsız kuruluşlara denetletiyoruz."
+            eyebrow={production.certEyebrow}
+            title={production.certTitle}
+            description={production.certDescription}
           />
           <ul className="grid gap-4 sm:grid-cols-2">
             {certifications.map((certification) => (

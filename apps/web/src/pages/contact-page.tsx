@@ -4,31 +4,31 @@ import { PageHero } from '@/components/ui/page-hero'
 import { PageMeta } from '@/components/ui/page-meta'
 import { siteConfig } from '@/config/site'
 import { ContactForm } from '@/features/contact'
+import { useI18n } from '@/i18n'
 
 export function ContactPage() {
+  const { t } = useI18n()
   const { contact } = siteConfig
+  const labels = t.contact.info
   const items = [
-    { icon: MapPin, label: 'Adres', value: contact.address },
+    { icon: MapPin, label: labels.address, value: t.contactInfo.address },
     {
       icon: Phone,
-      label: 'Telefon',
+      label: labels.phone,
       value: contact.phone,
       href: `tel:${contact.phone.replace(/[^\d+]/g, '')}`,
     },
-    { icon: Mail, label: 'E-posta', value: contact.email, href: `mailto:${contact.email}` },
-    { icon: Clock, label: 'Çalışma saatleri', value: contact.hours },
+    { icon: Mail, label: labels.email, value: contact.email, href: `mailto:${contact.email}` },
+    { icon: Clock, label: labels.hours, value: t.contactInfo.hours },
   ]
 
   return (
     <>
-      <PageMeta
-        title="İletişim"
-        description="Bayilik, ihracat ve proje talepleriniz için Lumen Halı ile iletişime geçin."
-      />
+      <PageMeta title={t.nav.contact} description={t.contact.metaDescription} />
       <PageHero
-        eyebrow="İletişim"
-        title="Projenizi konuşalım."
-        description="Bayilik, ihracat veya otel/ofis projeleriniz için formu doldurun; satış ekibimiz bir iş günü içinde size dönüş yapsın."
+        eyebrow={t.contact.eyebrow}
+        title={t.contact.title}
+        description={t.contact.description}
       />
 
       <section className="py-20 sm:py-24">

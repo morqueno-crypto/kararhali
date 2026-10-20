@@ -1,12 +1,15 @@
 import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router'
+import { useI18n } from '@/i18n'
 import type { Collection } from '@/types/collection'
 import { CarpetSwatch } from './carpet-swatch'
 
 export function CollectionCard({ collection }: { collection: Collection }) {
+  const { t, path } = useI18n()
+
   return (
     <Link
-      to={`/koleksiyonlar/${collection.slug}`}
+      to={path('collectionDetail', { slug: collection.slug })}
       className="group flex flex-col overflow-hidden rounded-2xl bg-cream-100 ring-1 ring-ink-900/5 transition hover:-translate-y-1 hover:shadow-xl hover:ring-ink-900/10"
     >
       <div className="flex aspect-4/3 items-center justify-center bg-cream-200 p-6">
@@ -18,7 +21,7 @@ export function CollectionCard({ collection }: { collection: Collection }) {
       </div>
       <div className="flex flex-1 flex-col p-6">
         <p className="text-xs font-semibold tracking-[0.15em] text-madder-600 uppercase">
-          {collection.category}
+          {t.collections.categories[collection.category]}
         </p>
         <h3 className="mt-2 flex items-center justify-between text-2xl font-medium text-ink-950">
           {collection.name}

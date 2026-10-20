@@ -1,7 +1,10 @@
 import { ButtonLink } from '@/components/ui/button-link'
 import { Container } from '@/components/ui/container'
+import { useI18n } from '@/i18n'
 
 export function CtaSection() {
+  const { t, path } = useI18n()
+
   return (
     <section className="py-20 sm:py-28">
       <Container>
@@ -21,16 +24,11 @@ export function CtaSection() {
             <rect width="200" height="200" fill="url(#cta-diamonds)" />
           </svg>
           <div className="relative max-w-2xl">
-            <h2 className="text-3xl font-medium text-cream-50 sm:text-4xl">
-              Bayilik, ihracat ve proje çözümleri için bizimle çalışın.
-            </h2>
-            <p className="mt-4 text-lg text-cream-100">
-              Otel, ofis ve perakende projelerinize özel ölçü, desen ve renk seçenekleriyle teklif
-              hazırlayalım.
-            </p>
+            <h2 className="text-3xl font-medium text-cream-50 sm:text-4xl">{t.cta.title}</h2>
+            <p className="mt-4 text-lg text-cream-100">{t.cta.text}</p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <ButtonLink to="/iletisim" variant="light">
-                Teklif isteyin
+              <ButtonLink to={path('contact')} variant="light">
+                {t.cta.button}
               </ButtonLink>
             </div>
           </div>

@@ -1,21 +1,12 @@
 import { env } from '@/config/env'
+import type { PageKey } from '@/i18n'
 
-// Örnek (dummy) kurumsal bilgiler.
+// Dilden bağımsız site sabitleri (örnek/dummy). Metinler i18n/messages altında.
 export const siteConfig = {
   name: env.VITE_APP_NAME,
-  tagline: 'Modern halı üretiminde ustalık',
-  description:
-    'Lumen Halı; tasarımdan dokumaya, kalite kontrolden ihracata kadar tüm süreçleri kendi tesislerinde yöneten modern bir halı üreticisidir.',
   contact: {
-    address: 'Organize Sanayi Bölgesi, 4. Cadde No: 12, Şehitkamil / Gaziantep',
     phone: '+90 (342) 000 00 00',
-    email: 'info@lumenhali.example',
-    hours: 'Pazartesi – Cuma, 08:30 – 18:00',
+    email: 'info@kararhali.example',
   },
-  nav: [
-    { label: 'Kurumsal', to: '/kurumsal' },
-    { label: 'Koleksiyonlar', to: '/koleksiyonlar' },
-    { label: 'Üretim', to: '/uretim' },
-    { label: 'İletişim', to: '/iletisim' },
-  ],
-} as const
+  nav: ['about', 'collections', 'production', 'contact'] as const satisfies readonly PageKey[],
+}
