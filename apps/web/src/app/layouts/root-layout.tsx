@@ -19,14 +19,14 @@ export function RootLayout({ locale }: { locale: Locale }) {
       <div className="flex min-h-dvh flex-col">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-full focus:bg-ink-950 focus:px-4 focus:py-2 focus:text-cream-50"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-on-accent"
         >
           {messages[locale].common.skipToContent}
         </a>
         <div
           aria-hidden="true"
           className={cn(
-            'fixed inset-x-0 top-0 z-[70] h-0.5 origin-left bg-madder-500 transition-transform duration-500',
+            'fixed inset-x-0 top-0 z-[70] h-0.5 origin-left bg-accent transition-transform duration-500',
             loading ? 'scale-x-75' : 'scale-x-0',
           )}
         />
@@ -35,7 +35,10 @@ export function RootLayout({ locale }: { locale: Locale }) {
           <Outlet />
         </main>
         <SiteFooter />
-        <ScrollRestoration />
+        {/* Tam sayfa yüklemelerinde location.key hep "default" olur; o durumda yola göre sakla. */}
+        <ScrollRestoration
+          getKey={(location) => (location.key === 'default' ? location.pathname : location.key)}
+        />
       </div>
     </LocaleContext>
   )

@@ -12,157 +12,158 @@ interface Stat {
 
 export interface CompanyContent {
   stats: Stat[]
+  pillars: Item[]
   values: Item[]
-  milestones: { year: string; text: string }[]
   productionSteps: Item[]
-  facilityHighlights: Stat[]
-  certifications: string[]
 }
 
-// Örnek (dummy) kurumsal içerik.
+/** Görseller (asset köküne göre). */
+export const companyImages = {
+  hero: 'project/koleksiyonlar.jpg',
+  carpets: 'project/koleksiyonlar.jpg',
+  rolls: 'project/rulo.jpg',
+  catalogs: 'project/kataloglar.jpg',
+  craft: 'agency-1.jpg',
+  fairs: [
+    'project/galeri/fuar1.jpg',
+    'project/galeri/fuar2.jpg',
+    'project/galeri/fuar3.png',
+    'project/galeri/fuar4.jpg',
+  ],
+} as const
+
+// Kuruluş yılı, vizyon ve iş planı metinleri kararhali.com/hakkimizda sayfasından uyarlanmıştır.
 export const companyContent: Localized<CompanyContent> = {
   tr: {
     stats: [
-      { value: '1987', label: 'Kuruluş yılı' },
-      { value: '45.000 m²', label: 'Kapalı üretim alanı' },
-      { value: '3,5 milyon m²', label: 'Yıllık üretim kapasitesi' },
-      { value: '40+', label: 'İhracat yapılan ülke' },
+      { value: '1966', label: 'Kuruluş yılı' },
+      { value: '60 yıl', label: 'Tekstil deneyimi' },
+      { value: '22', label: 'Koleksiyon' },
+      { value: '~300', label: 'Halı modeli' },
+    ],
+    pillars: [
+      {
+        title: 'İş planı',
+        text: 'İş ahlakı, özveri ve disiplini kılavuz edinen Karar Tekstil, halıyı yer döşemesinin ötesinde bir dekorasyon aracı olarak görür.',
+      },
+      {
+        title: 'Müşteri memnuniyeti',
+        text: 'Kaliteli ve her yıl çeşitliliği artan ürünleriyle müşteriyi memnun etmeyi temel amaç edinmiştir.',
+      },
+      {
+        title: 'Kurumsal vizyon',
+        text: 'Tasarım çalışmalarıyla Türkiye’de örnek alınan, globalleşen dünyaya uyum sağlayan, sektörde söz sahibi bir firma olmak.',
+      },
     ],
     values: [
       {
-        title: 'Ustalık',
-        text: 'Üç kuşaktır aktarılan dokuma bilgisini modern teknolojiyle birleştiriyoruz.',
+        title: 'Özgün tasarım',
+        text: 'Kendi bünyemizdeki tasarım ekibiyle eşsiz desenler geliştiriyoruz.',
       },
       {
-        title: 'Sürdürülebilirlik',
-        text: 'Geri dönüştürülmüş iplik, güneş enerjisi ve su geri kazanımıyla üretiyoruz.',
+        title: 'Son teknoloji',
+        text: 'Üretimde son teknoloji tezgâhlar ve en iyi malzemeyi kullanıyoruz.',
       },
       {
-        title: 'Tasarım',
-        text: 'Kendi tasarım stüdyomuzda her yıl 200’ü aşkın yeni desen geliştiriyoruz.',
+        title: 'Geniş ürün yelpazesi',
+        text: 'Halıdan rulo kesime, klasikten moderne her beğeniye uygun ürün sunuyoruz.',
       },
       {
-        title: 'Güvenilirlik',
-        text: 'Zamanında teslimat ve tutarlı kaliteyle uzun soluklu iş ortaklıkları kuruyoruz.',
+        title: 'Bölgeye katkı',
+        text: 'Yatırımlarımızla bölge insanına istihdam sağlıyor, kalkınmaya katkıda bulunuyoruz.',
       },
-    ],
-    milestones: [
-      { year: '1987', text: 'Gaziantep’te 12 tezgâhlı küçük bir atölye olarak kuruldu.' },
-      { year: '1998', text: 'İlk Wilton jakar tezgâhları devreye alındı, ihracat başladı.' },
-      { year: '2008', text: 'Organize Sanayi Bölgesi’ndeki yeni tesise taşınıldı.' },
-      { year: '2016', text: 'Tasarım stüdyosu ve dijital desen laboratuvarı kuruldu.' },
-      { year: '2022', text: 'Çatı GES ile enerjinin %60’ı güneşten karşılanmaya başlandı.' },
-      { year: '2026', text: '40’ı aşkın ülkede satış noktası ve proje ortaklığına ulaşıldı.' },
     ],
     productionSteps: [
       {
-        title: 'İplik seçimi ve boyama',
-        text: 'Yün, pamuk ve sentetik iplikler laboratuvarda test edilir; reçeteye göre kendi boyahanemizde renklendirilir.',
+        title: 'Tasarım',
+        text: 'Tasarım ekibimiz trendleri ve müşteri beklentilerini özgün desen ve renklere dönüştürür.',
       },
       {
-        title: 'Tasarım ve dijital desen',
-        text: 'Tasarım stüdyosunda çizilen desenler dijital ortamda tezgâh programına dönüştürülür.',
+        title: 'İplik hazırlığı',
+        text: 'Seçilen iplikler renk reçetesine göre hazırlanır ve kalite testlerinden geçirilir.',
       },
       {
         title: 'Dokuma',
-        text: 'Wilton jakar, tufting ve el tezgâhlarında desen ilmek ilmek dokunur.',
+        text: 'Desenler son teknoloji dokuma tezgâhlarında ilmek ilmek halıya işlenir.',
       },
       {
-        title: 'Yıkama ve bitiş',
-        text: 'Halılar yıkanır, kurutulur, tıraşlanır ve kenar işlemleri tamamlanır.',
+        title: 'Bitiş işlemleri',
+        text: 'Halılar tıraşlanır, yıkanır ve kenar işlemleriyle son hâlini alır.',
       },
       {
         title: 'Kalite kontrol',
-        text: 'Her halı ölçü, renk, yoğunluk ve yüzey kontrolünden tek tek geçer.',
+        text: 'Her ürün ölçü, renk ve yüzey kontrolünden geçtikten sonra onaylanır.',
       },
       {
-        title: 'Paketleme ve sevkiyat',
-        text: 'Geri dönüştürülebilir ambalajla paketlenir, dünyanın her yerine güvenle gönderilir.',
+        title: 'Sevkiyat',
+        text: 'Ürünler özenle paketlenerek bayilerimize ve müşterilerimize ulaştırılır.',
       },
-    ],
-    facilityHighlights: [
-      { value: '120', label: 'Dokuma tezgâhı' },
-      { value: '%60', label: 'Güneş enerjisi payı' },
-      { value: '%85', label: 'Su geri kazanımı' },
-      { value: '450+', label: 'Çalışan' },
-    ],
-    certifications: [
-      'ISO 9001 Kalite Yönetimi',
-      'ISO 14001 Çevre Yönetimi',
-      'OEKO-TEX Standard 100',
-      'GRS Geri Dönüştürülmüş İçerik',
     ],
   },
   en: {
     stats: [
-      { value: '1987', label: 'Founded' },
-      { value: '45,000 m²', label: 'Covered production area' },
-      { value: '3.5 million m²', label: 'Annual production capacity' },
-      { value: '40+', label: 'Export countries' },
+      { value: '1966', label: 'Founded' },
+      { value: '60 years', label: 'Textile experience' },
+      { value: '22', label: 'Collections' },
+      { value: '~300', label: 'Carpet models' },
+    ],
+    pillars: [
+      {
+        title: 'Business plan',
+        text: 'Guided by business ethics, dedication and discipline, Karar Tekstil sees carpets as a decor element beyond floor covering.',
+      },
+      {
+        title: 'Customer satisfaction',
+        text: 'Our core aim is to satisfy customers with quality products whose variety grows every year.',
+      },
+      {
+        title: 'Corporate vision',
+        text: 'To be a leading voice in the industry, setting the standard in design in Türkiye and adapting to a globalising world.',
+      },
     ],
     values: [
       {
-        title: 'Craftsmanship',
-        text: 'We combine weaving know-how passed down through three generations with modern technology.',
+        title: 'Original design',
+        text: 'Our in-house design team develops unique patterns.',
       },
       {
-        title: 'Sustainability',
-        text: 'We produce with recycled yarn, solar energy and water recovery.',
+        title: 'Latest technology',
+        text: 'We use state-of-the-art looms and the finest materials in production.',
       },
       {
-        title: 'Design',
-        text: 'Our in-house design studio develops more than 200 new patterns every year.',
+        title: 'Wide product range',
+        text: 'From carpets to roll-cut runners, classic to modern, we offer something for every taste.',
       },
       {
-        title: 'Reliability',
-        text: 'We build long-term partnerships through on-time delivery and consistent quality.',
+        title: 'Regional impact',
+        text: 'Through our investments we create local jobs and contribute to regional development.',
       },
-    ],
-    milestones: [
-      { year: '1987', text: 'Founded in Gaziantep as a small workshop with 12 looms.' },
-      { year: '1998', text: 'First Wilton jacquard looms commissioned; exports began.' },
-      { year: '2008', text: 'Moved to a new facility in the Organized Industrial Zone.' },
-      { year: '2016', text: 'Design studio and digital pattern lab established.' },
-      { year: '2022', text: 'Rooftop solar began supplying 60% of our energy.' },
-      { year: '2026', text: 'Reached points of sale and project partners in over 40 countries.' },
     ],
     productionSteps: [
       {
-        title: 'Yarn selection and dyeing',
-        text: 'Wool, cotton and synthetic yarns are lab-tested and coloured to recipe in our own dye house.',
+        title: 'Design',
+        text: 'Our design team turns trends and customer expectations into original patterns and colours.',
       },
       {
-        title: 'Design and digital patterning',
-        text: 'Patterns drawn in our design studio are converted into loom programs digitally.',
+        title: 'Yarn preparation',
+        text: 'Selected yarns are prepared to colour recipes and pass quality tests.',
       },
       {
         title: 'Weaving',
-        text: 'Patterns are woven knot by knot on Wilton jacquard, tufting and hand looms.',
+        text: 'Patterns are woven knot by knot on state-of-the-art looms.',
       },
       {
-        title: 'Washing and finishing',
-        text: 'Carpets are washed, dried, sheared and their edges finished.',
+        title: 'Finishing',
+        text: 'Carpets are sheared, washed and edge-finished into their final form.',
       },
       {
         title: 'Quality control',
-        text: 'Every carpet is individually checked for size, colour, density and surface.',
+        text: 'Every product is approved only after size, colour and surface checks.',
       },
       {
-        title: 'Packing and shipping',
-        text: 'Packed in recyclable materials and shipped safely worldwide.',
+        title: 'Shipping',
+        text: 'Products are carefully packed and delivered to our dealers and customers.',
       },
-    ],
-    facilityHighlights: [
-      { value: '120', label: 'Looms' },
-      { value: '60%', label: 'Solar energy share' },
-      { value: '85%', label: 'Water recovery' },
-      { value: '450+', label: 'Employees' },
-    ],
-    certifications: [
-      'ISO 9001 Quality Management',
-      'ISO 14001 Environmental Management',
-      'OEKO-TEX Standard 100',
-      'GRS Recycled Content',
     ],
   },
 }

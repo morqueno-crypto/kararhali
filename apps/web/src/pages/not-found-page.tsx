@@ -9,11 +9,11 @@ export function NotFoundPage() {
   return (
     <>
       <PageMeta title={t.notFound.metaTitle} />
-      <Container className="flex flex-col items-start py-28 sm:py-36">
-        <p className="font-display text-7xl font-medium text-madder-600">404</p>
-        <h1 className="mt-4 text-3xl font-medium text-ink-950 sm:text-4xl">{t.notFound.title}</h1>
-        <p className="mt-4 max-w-md text-lg text-ink-700">{t.notFound.text}</p>
-        <ButtonLink to={path('home')} className="mt-8">
+      <Container className="flex flex-col items-start py-28 sm:py-40">
+        <p className="font-display text-8xl font-semibold text-accent sm:text-9xl">404</p>
+        <h1 className="mt-6 text-3xl font-semibold text-ink sm:text-5xl">{t.notFound.title}</h1>
+        <p className="mt-4 max-w-md text-lg text-muted">{t.notFound.text}</p>
+        <ButtonLink to={path('home')} className="mt-10">
           {t.common.backHome}
         </ButtonLink>
       </Container>

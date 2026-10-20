@@ -1,12 +1,17 @@
 # Karar Halı — proje kuralları
 
-Modern halı üretim fabrikası için iki dilli (Türkçe / İngilizce) kurumsal tanıtım sitesi (demo). Şu an backend yok; tüm içerik `apps/web/src/data/` altında statik ve örnektir.
+Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site tasarımı (demo). Şu an backend yok; içerik `apps/web/src/data/` altında statiktir.
+
+- Koleksiyon adları, ebatlar, model görselleri, logo ve iletişim bilgileri kararhali.com'dan alınmıştır. Koleksiyon açıklama metinleri örnektir.
+- Görseller kopyalanmaz; `VITE_ASSET_BASE_URL` (varsayılan `https://www.kararhali.com/assets/img`) üzerinden uzak URL ile yüklenir. URL'ler yalnızca `lib/assets.ts` içindeki `assetUrl()` ile üretilir. Uzak görseller `components/ui/remote-image.tsx` ile gösterilir (tembel yükleme + hata yer tutucusu).
+- Her koleksiyonda sitedeki ilk 8 model listelenir. Model kaydı dosya adıdır (`6055A_KAHVE`); desen kodu, renk ve URL slug'ı (`6055a-kahve`) `services/collections.ts` içinde bu addan türetilir. Renk adları ve renk noktası değerleri `data/colors.ts`'te.
+- Route'lar: `/tr/koleksiyonlar/:slug` (koleksiyon) ve `/tr/koleksiyonlar/:slug/:model` (model detayı).
 
 ## Teknoloji yığını
 
 - pnpm workspaces + Turborepo (monorepo)
 - `apps/web`: Vite + React 19 + TypeScript (strict) + Tailwind CSS v4 + React Router (data router, loader'lar)
-- zod (env ve form doğrulama), lucide-react (ikonlar), Fontsource (Inter, Fraunces)
+- zod (env ve form doğrulama), lucide-react (ikonlar), Fontsource (Geist: gövde metni, Bricolage Grotesque: başlıklar)
 - oxlint + Prettier, Vitest + Testing Library, GitHub Actions CI
 
 ## Komutlar (kökten)
@@ -25,7 +30,7 @@ Modern halı üretim fabrikası için iki dilli (Türkçe / İngilizce) kurumsal
 - `components/ui`, `components/layout`: paylaşılan bileşenler
 - `services/`: veri erişim katmanı (şimdi statik, sonra API)
 - `data/`: statik içerik · `config/`: env.ts, site.ts · `lib/`: yardımcılar · `types/`: paylaşılan tipler
-- `styles/globals.css`: Tailwind + `@theme` tasarım token'ları (cream, ink, madder, indigo)
+- `styles/globals.css`: Tailwind + `@theme` içinde anlamsal (rol bazlı) koyu tema token'ları: `canvas` (sayfa zemini), `surface` / `raised` (kart yüzeyleri), `line` (çizgiler), `ink` / `muted` / `subtle` (metin seviyeleri), `accent` / `accent-strong` / `on-accent` (vurgu), `paper` (beyaz zeminli ürün fotoğrafları için açık yüzey). Bileşenlerde ham renk (`bg-stone-900`, `#fff` vb.) kullanılmaz; açık tema eklenecekse sadece bu token değerleri değişir.
 
 ## Mimari kurallar
 

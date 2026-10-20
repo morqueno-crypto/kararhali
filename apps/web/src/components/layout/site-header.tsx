@@ -15,19 +15,13 @@ export function SiteHeader() {
   const close = () => setOpen(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-ink-900/10 bg-cream-50/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-line/60 bg-canvas/80 backdrop-blur-xl">
       <Container className="flex h-18 items-center justify-between gap-4">
-        <Link
-          to={path('home')}
-          onClick={close}
-          className="flex items-center gap-3"
-          aria-label={t.common.homeLink(siteConfig.name)}
-        >
-          <Logo />
-          <span className="font-display text-xl font-semibold text-ink-950">{siteConfig.name}</span>
+        <Link to={path('home')} onClick={close} aria-label={t.common.homeLink(siteConfig.name)}>
+          <Logo className="h-9 sm:h-10" />
         </Link>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-8 lg:flex">
           <nav aria-label={t.common.mainMenu} className="flex items-center gap-8">
             {siteConfig.nav.map((page) => (
               <NavLink
@@ -35,8 +29,8 @@ export function SiteHeader() {
                 to={path(page)}
                 className={({ isActive }) =>
                   cn(
-                    'text-sm font-medium transition-colors hover:text-madder-600',
-                    isActive ? 'text-madder-600' : 'text-ink-700',
+                    'text-sm font-medium transition-colors hover:text-ink',
+                    isActive ? 'text-ink' : 'text-muted',
                   )
                 }
               >
@@ -50,11 +44,11 @@ export function SiteHeader() {
           </ButtonLink>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
           <LanguageSwitcher onSelect={close} />
           <button
             type="button"
-            className="inline-flex size-10 items-center justify-center rounded-full text-ink-900"
+            className="inline-flex size-10 items-center justify-center rounded-full text-ink hover:bg-ink/5"
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? t.common.closeMenu : t.common.openMenu}
@@ -69,7 +63,7 @@ export function SiteHeader() {
         <nav
           id="mobile-menu"
           aria-label={t.common.mobileMenu}
-          className="border-t border-ink-900/10 md:hidden"
+          className="border-t border-line lg:hidden"
         >
           <Container className="flex flex-col gap-1 py-4">
             {siteConfig.nav.map((page) => (
@@ -79,8 +73,8 @@ export function SiteHeader() {
                 onClick={close}
                 className={({ isActive }) =>
                   cn(
-                    'rounded-lg px-3 py-3 text-base font-medium',
-                    isActive ? 'bg-cream-200 text-madder-600' : 'text-ink-900',
+                    'rounded-xl px-3 py-3 text-base font-medium',
+                    isActive ? 'bg-raised text-ink' : 'text-muted',
                   )
                 }
               >

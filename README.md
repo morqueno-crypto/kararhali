@@ -1,6 +1,6 @@
 # Karar Halı
 
-Modern bir halı üretim fabrikası için iki dilli (Türkçe / İngilizce) kurumsal tanıtım sitesi. **Demo projedir:** firma ve tüm içerikler kurgusaldır, backend yoktur.
+Karar Halı için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site tasarımı. **Demo projedir:** backend yoktur. Logo, koleksiyonlar, model görselleri ve iletişim bilgileri [kararhali.com](https://www.kararhali.com)'dan alınmıştır; görseller oradan uzak URL ile yüklenir, bu yüzden geliştirme sırasında internet bağlantısı gerekir.
 
 ## Gereksinimler
 
@@ -35,7 +35,7 @@ apps/web     → Statik frontend (Vite + React + TS + Tailwind v4 + React Router
 packages/    → İleride ortak paketler (ui, shared tipler)
 ```
 
-Sayfalar: Ana sayfa, Kurumsal, Koleksiyonlar (filtre + detay), Üretim, İletişim (demo form), 404. Her sayfa Türkçe ve İngilizce mevcuttur (ör. `/tr/kurumsal` ↔ `/en/about`).
+Sayfalar: Ana sayfa, Kurumsal, Koleksiyonlar (halı / rulo kesim filtresi), Koleksiyon detayı (model ızgarası), Model detayı (fotoğraf, renk seçenekleri, ebatlar), Üretim, İletişim (demo form), 404. Her sayfa Türkçe ve İngilizce mevcuttur (ör. `/tr/koleksiyonlar/laguna/6055a-kahve` ↔ `/en/collections/laguna/6055a-kahve`).
 
 ## Dağıtım
 

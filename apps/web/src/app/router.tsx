@@ -75,6 +75,20 @@ function localeRoutes(locale: Locale): RouteObject {
             },
           },
           {
+            path: `${segment('collections')}/:slug/:model`,
+            handle: handle('modelDetail'),
+            lazy: async () => {
+              const [page, data] = await Promise.all([
+                import('@/pages/model-detail-page'),
+                import('@/pages/model-detail-loader'),
+              ])
+              return {
+                Component: page.ModelDetailPage,
+                loader: (args) => data.modelDetailLoader(args, locale),
+              }
+            },
+          },
+          {
             path: segment('production'),
             handle: handle('production'),
             lazy: async () => {
@@ -100,7 +114,7 @@ function localeRoutes(locale: Locale): RouteObject {
 export const routes: RouteObject[] = [
   {
     path: '/',
-    hydrateFallbackElement: <div className="min-h-dvh bg-cream-50" />,
+    hydrateFallbackElement: <div className="min-h-dvh bg-canvas" />,
     children: [
       // Kök adres: tarayıcı diline göre yönlendir.
       { index: true, loader: () => redirect(`/${detectLocale()}`) },

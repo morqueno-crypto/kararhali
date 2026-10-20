@@ -18,7 +18,7 @@ type FormState =
   | { status: 'success' }
 
 const inputClass =
-  'mt-2 block w-full rounded-xl border-0 bg-cream-50 px-4 py-3 text-ink-950 ring-1 ring-ink-900/15 placeholder:text-ink-300 focus:ring-2 focus:ring-madder-500 focus:outline-none'
+  'mt-2 block w-full rounded-xl border border-line bg-canvas px-4 py-3 text-ink placeholder:text-subtle transition-colors focus:border-accent focus:outline-none aria-invalid:border-red-400'
 
 export function ContactForm() {
   const { t } = useI18n()
@@ -46,11 +46,11 @@ export function ContactForm() {
 
   if (state.status === 'success') {
     return (
-      <div role="status" className="rounded-2xl bg-cream-100 p-8 ring-1 ring-ink-900/10">
-        <CheckCircle2 className="size-10 text-madder-600" aria-hidden="true" />
-        <h2 className="mt-4 text-2xl font-medium text-ink-950">{t.contact.success.title}</h2>
-        <p className="mt-2 text-ink-700">{t.contact.success.text}</p>
-        <p className="mt-4 text-xs text-ink-500">{t.contact.success.note}</p>
+      <div role="status" className="rounded-3xl border border-line bg-surface p-8 sm:p-10">
+        <CheckCircle2 className="size-10 text-accent" aria-hidden="true" />
+        <h2 className="mt-5 text-2xl font-semibold text-ink">{t.contact.success.title}</h2>
+        <p className="mt-2 text-muted">{t.contact.success.text}</p>
+        <p className="mt-5 text-xs text-subtle">{t.contact.success.note}</p>
       </div>
     )
   }
@@ -60,7 +60,11 @@ export function ContactForm() {
   const { form } = t.contact
 
   return (
-    <form action={formAction} noValidate className="grid gap-6 sm:grid-cols-2">
+    <form
+      action={formAction}
+      noValidate
+      className="grid gap-6 rounded-3xl border border-line bg-surface p-6 sm:grid-cols-2 sm:p-10"
+    >
       <Field label={form.name} name="name" error={errors.name}>
         <input
           id="name"
@@ -139,12 +143,12 @@ interface FieldProps {
 function Field({ label, name, error, className, children }: FieldProps) {
   return (
     <div className={cn(className)}>
-      <label htmlFor={name} className="text-sm font-medium text-ink-900">
+      <label htmlFor={name} className="text-sm font-medium text-muted">
         {label}
       </label>
       {children}
       {error && (
-        <p id={`${name}-error`} className="mt-2 text-sm text-madder-600">
+        <p id={`${name}-error`} className="mt-2 text-sm text-red-400">
           {error}
         </p>
       )}

@@ -1,3 +1,4 @@
+import { ArrowRight } from 'lucide-react'
 import { ButtonLink } from '@/components/ui/button-link'
 import { Container } from '@/components/ui/container'
 import { useI18n } from '@/i18n'
@@ -8,29 +9,17 @@ export function CtaSection() {
   return (
     <section className="py-20 sm:py-28">
       <Container>
-        <div className="relative overflow-hidden rounded-3xl bg-madder-600 px-8 py-16 sm:px-16">
-          <svg
-            className="absolute inset-y-0 right-0 h-full w-1/2 opacity-15"
-            viewBox="0 0 200 200"
-            preserveAspectRatio="xMaxYMid slice"
+        <div className="relative isolate overflow-hidden rounded-[2rem] border border-line bg-surface px-8 py-16 sm:px-16 sm:py-20">
+          <div
+            className="absolute -top-32 -right-32 -z-10 size-96 rounded-full bg-accent/20 blur-3xl"
             aria-hidden="true"
-          >
-            <defs>
-              <pattern id="cta-diamonds" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M20 2 L38 20 L20 38 L2 20Z" fill="none" stroke="#fff" strokeWidth="2" />
-                <path d="M20 12 L28 20 L20 28 L12 20Z" fill="#fff" />
-              </pattern>
-            </defs>
-            <rect width="200" height="200" fill="url(#cta-diamonds)" />
-          </svg>
-          <div className="relative max-w-2xl">
-            <h2 className="text-3xl font-medium text-cream-50 sm:text-4xl">{t.cta.title}</h2>
-            <p className="mt-4 text-lg text-cream-100">{t.cta.text}</p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <ButtonLink to={path('contact')} variant="light">
-                {t.cta.button}
-              </ButtonLink>
-            </div>
+          />
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-semibold text-ink sm:text-5xl">{t.cta.title}</h2>
+            <p className="mt-5 text-lg text-muted">{t.cta.text}</p>
+            <ButtonLink to={path('contact')} className="mt-10">
+              {t.cta.button} <ArrowRight className="size-4" aria-hidden="true" />
+            </ButtonLink>
           </div>
         </div>
       </Container>

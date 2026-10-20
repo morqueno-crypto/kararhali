@@ -1,41 +1,45 @@
 @import 'tailwindcss';
 
+/*
+ * Anlamsal tasarım token'ları (koyu tema).
+ * Bileşenler renk adı değil rol kullanır: bg-canvas, bg-surface, text-ink, text-muted, bg-accent ...
+ * İleride açık tema eklemek için yalnızca bu değerler değiştirilir.
+ */
 @theme {
-  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque Variable', 'Geist Variable', ui-sans-serif, sans-serif;
 
-  /* Zemin: yün / keten tonları */
-  --color-cream-50: oklch(0.985 0.007 85);
-  --color-cream-100: oklch(0.965 0.014 82);
-  --color-cream-200: oklch(0.925 0.024 78);
-  --color-cream-300: oklch(0.87 0.035 74);
+  --color-canvas: oklch(0.145 0.006 60);
+  --color-surface: oklch(0.185 0.007 60);
+  --color-raised: oklch(0.225 0.008 60);
+  --color-line: oklch(0.32 0.008 60);
 
-  /* Metin: koyu toprak */
-  --color-ink-950: oklch(0.18 0.015 50);
-  --color-ink-900: oklch(0.24 0.018 50);
-  --color-ink-700: oklch(0.38 0.02 52);
-  --color-ink-500: oklch(0.54 0.02 55);
-  --color-ink-300: oklch(0.72 0.018 60);
+  --color-ink: oklch(0.96 0.008 80);
+  --color-muted: oklch(0.76 0.012 75);
+  --color-subtle: oklch(0.58 0.012 70);
 
-  /* Vurgu: kök boya kırmızısı */
-  --color-madder-400: oklch(0.62 0.14 38);
-  --color-madder-500: oklch(0.54 0.15 35);
-  --color-madder-600: oklch(0.47 0.14 33);
-  --color-madder-700: oklch(0.39 0.12 30);
+  --color-accent: oklch(0.78 0.13 70);
+  --color-accent-strong: oklch(0.84 0.14 75);
+  --color-on-accent: oklch(0.18 0.02 60);
 
-  /* İkincil: indigo */
-  --color-indigo-600: oklch(0.38 0.08 260);
-  --color-indigo-800: oklch(0.27 0.06 262);
+  /* Ürün fotoğrafları beyaz zeminli; kartlarda bu açık yüzey kullanılır. */
+  --color-paper: oklch(0.97 0.004 80);
 }
 
 @layer base {
+  :root {
+    color-scheme: dark;
+  }
+
   html {
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-cream-50 font-sans text-ink-900;
+    @apply bg-canvas font-sans text-ink;
+    font-feature-settings: 'ss01', 'cv11';
   }
 
   h1,
@@ -44,13 +48,24 @@
     @apply font-display tracking-tight text-balance;
   }
 
+  ::selection {
+    @apply bg-accent text-on-accent;
+  }
+
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-madder-500;
+    @apply outline-2 outline-offset-2 outline-accent;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
 }

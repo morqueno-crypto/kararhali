@@ -1,37 +1,41 @@
 import type { Localized } from '@/i18n'
 
-export type PatternKind = 'medallion' | 'geometric' | 'stripe' | 'grid'
+export type CollectionCategory = 'carpet' | 'roll'
 
-export type CollectionCategory = 'classic' | 'modern' | 'kilim' | 'outdoor'
-
-/** Veri kaynağındaki (çok dilli) koleksiyon kaydı. */
+/** Veri kaynağındaki koleksiyon kaydı. */
 export interface CollectionRecord {
   slug: string
+  name: string
   category: CollectionCategory
-  pattern: PatternKind
-  /** [zemin, ana desen, detay] */
-  palette: readonly [string, string, string]
+  /** Ham ölçüler: halı için "200x290", rulo için "200xR" (en × rulo). */
   sizes: readonly string[]
-  featured?: boolean
-  name: Localized
-  summary: Localized
+  /** Kapak görseli yolu (asset köküne göre). Yoksa ilk modelin fotoğrafı kullanılır. */
+  cover?: string
+  /** Model görsel dosya adları, ör. "6055A_KAHVE" → laguna/6055A_KAHVE.jpg */
+  models: readonly string[]
   description: Localized
-  material: Localized
-  pileHeight: Localized
-  technique: Localized
-  features: Localized<readonly string[]>
+  featured?: boolean
+}
+
+export interface ProductModel {
+  slug: string
+  collectionSlug: string
+  /** Desen kodu, ör. "6055A" */
+  code: string
+  colorKey: string
+  color: string
+  hex: string
+  image: string
 }
 
 /** Arayüze verilen, tek dile çevrilmiş koleksiyon. */
-export interface Collection extends Omit<
-  CollectionRecord,
-  'name' | 'summary' | 'description' | 'material' | 'pileHeight' | 'technique' | 'features'
-> {
+export interface Collection {
+  slug: string
   name: string
-  summary: string
+  category: CollectionCategory
+  sizes: readonly string[]
+  cover: string
   description: string
-  material: string
-  pileHeight: string
-  technique: string
-  features: readonly string[]
+  featured: boolean
+  models: ProductModel[]
 }

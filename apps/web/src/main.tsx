@@ -1,5 +1,5 @@
-import '@fontsource-variable/fraunces'
-import '@fontsource-variable/inter'
+import '@fontsource-variable/bricolage-grotesque'
+import '@fontsource-variable/geist'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { AppProviders } from '@/app/providers'

@@ -12,8 +12,8 @@ export function RouteErrorPage() {
 
   return (
     <Container className="py-28">
-      <h1 className="text-3xl font-medium text-ink-950">{t.error.title}</h1>
-      <p className="mt-4 text-ink-700">{t.error.text}</p>
+      <h1 className="text-3xl font-semibold text-ink">{t.error.title}</h1>
+      <p className="mt-4 text-muted">{t.error.text}</p>
       <ButtonLink to={path('home')} className="mt-8">
         {t.common.backHome}
       </ButtonLink>

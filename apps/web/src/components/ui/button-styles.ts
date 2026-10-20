@@ -1,9 +1,9 @@
 import { cn } from '@/lib/cn'
 
 const variants = {
-  primary: 'bg-madder-600 text-cream-50 hover:bg-madder-700',
-  secondary: 'border border-ink-900/20 text-ink-900 hover:border-ink-900 hover:bg-ink-900/5',
-  light: 'bg-cream-50 text-ink-950 hover:bg-cream-200',
+  primary: 'bg-accent text-on-accent hover:bg-accent-strong',
+  secondary: 'border border-line text-ink hover:border-ink/40 hover:bg-ink/5',
+  ghost: 'text-ink hover:bg-ink/5',
 } as const
 
 export type ButtonVariant = keyof typeof variants

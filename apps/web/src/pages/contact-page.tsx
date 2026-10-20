@@ -1,4 +1,4 @@
-import { Clock, Mail, MapPin, Phone } from 'lucide-react'
+import { Clock, Mail, MapPin, Phone, Printer } from 'lucide-react'
 import { Container } from '@/components/ui/container'
 import { PageHero } from '@/components/ui/page-hero'
 import { PageMeta } from '@/components/ui/page-meta'
@@ -15,9 +15,10 @@ export function ContactPage() {
     {
       icon: Phone,
       label: labels.phone,
-      value: contact.phone,
+      value: contact.phoneLines,
       href: `tel:${contact.phone.replace(/[^\d+]/g, '')}`,
     },
+    { icon: Printer, label: labels.fax, value: contact.fax },
     { icon: Mail, label: labels.email, value: contact.email, href: `mailto:${contact.email}` },
     { icon: Clock, label: labels.hours, value: t.contactInfo.hours },
   ]
@@ -31,26 +32,26 @@ export function ContactPage() {
         description={t.contact.description}
       />
 
-      <section className="py-20 sm:py-24">
-        <Container className="grid gap-16 lg:grid-cols-12">
+      <section className="py-16 sm:py-24">
+        <Container className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <ContactForm />
           </div>
           <aside className="lg:col-span-5">
-            <ul className="space-y-6 rounded-2xl bg-cream-100 p-8 ring-1 ring-ink-900/5">
+            <ul className="space-y-6 rounded-3xl border border-line bg-surface p-8 sm:p-10">
               {items.map(({ icon: Icon, label, value, href }) => (
                 <li key={label} className="flex gap-4">
-                  <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-madder-600/10 text-madder-600">
+                  <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-line text-accent">
                     <Icon className="size-5" aria-hidden="true" />
                   </span>
                   <div>
-                    <p className="text-sm text-ink-500">{label}</p>
+                    <p className="text-sm text-subtle">{label}</p>
                     {href ? (
-                      <a href={href} className="font-medium text-ink-950 hover:text-madder-600">
+                      <a href={href} className="font-medium text-ink hover:text-accent">
                         {value}
                       </a>
                     ) : (
-                      <p className="font-medium text-ink-950">{value}</p>
+                      <p className="font-medium text-ink">{value}</p>
                     )}
                   </div>
                 </li>

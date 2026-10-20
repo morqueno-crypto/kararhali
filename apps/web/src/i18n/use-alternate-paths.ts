@@ -10,9 +10,9 @@ function isRouteHandle(handle: unknown): handle is RouteHandle {
 export function useAlternatePaths(): Record<Locale, string> {
   const match = useMatches().findLast((m) => isRouteHandle(m.handle))
   const page = match && isRouteHandle(match.handle) ? match.handle.page : 'home'
-  const slug = match?.params.slug
+  const params = { slug: match?.params.slug, model: match?.params.model }
 
   return Object.fromEntries(
-    locales.map((locale) => [locale, localePath(locale, page, { slug })]),
+    locales.map((locale) => [locale, localePath(locale, page, params)]),
   ) as Record<Locale, string>
 }

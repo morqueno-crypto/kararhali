@@ -7,7 +7,7 @@ export async function collectionDetailLoader({ params }: LoaderFunctionArgs, loc
   if (!collection) throw new Response('Not Found', { status: 404 })
 
   const others = (await getCollections(locale))
-    .filter((c) => c.slug !== collection.slug)
+    .filter((c) => c.slug !== collection.slug && c.category === collection.category)
     .slice(0, 3)
   return { collection, others }
 }
