@@ -1,3 +1,8 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+
+# Kurulum betiği çalıştırmasına izin verilen paketler (pnpm varsayılan olarak hepsini engeller).
+# esbuild: tsx ve tsup'ın kullandığı derleyicinin platform ikilisini doğrular.
+allowBuilds:
+  esbuild: true

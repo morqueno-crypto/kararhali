@@ -1,6 +1,8 @@
 # Karar Halı
 
-Karar Halı için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site tasarımı. **Demo projedir:** backend yoktur. Logo, koleksiyonlar, model görselleri ve iletişim bilgileri [kararhali.com](https://www.kararhali.com)'dan alınmıştır; görseller oradan uzak URL ile yüklenir, bu yüzden geliştirme sırasında internet bağlantısı gerekir.
+Karar Halı için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site ve onu yönetecek backend. Logo, koleksiyonlar, model görselleri ve iletişim bilgileri [kararhali.com](https://www.kararhali.com)'dan alınmıştır; görseller oradan uzak URL ile yüklenir, bu yüzden geliştirme sırasında internet bağlantısı gerekir.
+
+**Durum:** Backend/API hazır. Sıradaki adımlar: sitenin API'ye bağlanması, ardından admin paneli.
 
 ## Gereksinimler
 
@@ -11,36 +13,37 @@ Karar Halı için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site 
 
 ```bash
 pnpm install
-pnpm dev
+cp apps/api/.env.example apps/api/.env      # OWNER_EMAIL ve OWNER_PASSWORD'ü doldurun
+pnpm --filter @karar-hali/api db:seed       # veritabanı + başlangıç verisi + ana kullanıcı
+pnpm dev                                    # site :5173, API :3000
 ```
 
-Site http://localhost:5173 adresinde açılır ve tarayıcı diline göre `/tr` veya `/en` adresine yönlendirir.
+Site http://localhost:5173 adresinde açılır ve tarayıcı diline göre `/tr` veya `/en` adresine yönlendirir. API: http://localhost:3000/api/v1.
 
 ## Komutlar
 
-| Komut            | Açıklama                           |
-| ---------------- | ---------------------------------- |
-| `pnpm dev`       | Geliştirme sunucusu                |
-| `pnpm build`     | Üretim derlemesi → `apps/web/dist` |
-| `pnpm preview`   | Derlenmiş siteyi önizleme          |
-| `pnpm lint`      | oxlint                             |
-| `pnpm typecheck` | TypeScript kontrolü                |
-| `pnpm test`      | Vitest testleri                    |
-| `pnpm format`    | Prettier ile biçimlendirme         |
+| Komut            | Açıklama                          |
+| ---------------- | --------------------------------- |
+| `pnpm dev`       | Site ve API geliştirme sunucuları |
+| `pnpm build`     | Üretim derlemeleri                |
+| `pnpm preview`   | Derlenmiş siteyi önizleme         |
+| `pnpm lint`      | oxlint                            |
+| `pnpm typecheck` | TypeScript kontrolü               |
+| `pnpm test`      | Vitest testleri (site + API)      |
+| `pnpm format`    | Prettier ile biçimlendirme        |
 
 ## Yapı
 
 ```
-apps/web     → Statik frontend (Vite + React + TS + Tailwind v4 + React Router)
-packages/    → İleride ortak paketler (ui, shared tipler)
+apps/web         → Site (Vite + React + TS + Tailwind v4 + React Router + GSAP)
+apps/api         → Backend (Hono + Drizzle + SQLite) — bkz. apps/api/README.md
+packages/shared  → Ortak zod şemaları ve tipler
 ```
 
-Sayfalar: Ana sayfa, Kurumsal, Koleksiyonlar (halı / rulo kesim filtresi), Koleksiyon detayı (model ızgarası), Model detayı (fotoğraf, renk seçenekleri, ebatlar), Üretim, İletişim (demo form), 404. Her sayfa Türkçe ve İngilizce mevcuttur (ör. `/tr/koleksiyonlar/laguna/6055a-kahve` ↔ `/en/collections/laguna/6055a-kahve`).
+Sayfalar: Ana sayfa, Kurumsal, Koleksiyonlar (halı / rulo kesim filtresi), Koleksiyon detayı (model ızgarası), Model detayı (fotoğraf, renk seçenekleri, ebatlar), Üretim, İletişim, 404. Her sayfa Türkçe ve İngilizce mevcuttur (ör. `/tr/koleksiyonlar/laguna/6055a-kahve` ↔ `/en/collections/laguna/6055a-kahve`).
 
 ## Dağıtım
 
-`apps/web/dist` tamamen statiktir. SPA olduğu için sunucuda tüm yollar `index.html`'e yönlendirilmelidir (ör. Netlify `_redirects`: `/* /index.html 200`).
-
-## Backend eklemek
-
-`apps/api` olarak eklenir. Veri erişimi `apps/web/src/services` katmanında toplandığı için yalnızca servislerin içi değişir. Ayrıntılar için [CLAUDE.md](CLAUDE.md) dosyasına bakın.
+- `apps/web/dist` statiktir. SPA olduğu için sunucuda tüm yollar `index.html`'e yönlendirilmelidir.
+- API bir Node.js süreci olarak çalışır: `pnpm --filter @karar-hali/api build && pnpm --filter @karar-hali/api start`.
+- Site ve API aynı alan adı altında yayınlanmalıdır (ör. `/api` → API). Böylece oturum çerezleri sorunsuz çalışır.

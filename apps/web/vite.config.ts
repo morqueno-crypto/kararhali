@@ -13,10 +13,12 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    // Backend (apps/api) eklendiğinde:
-    // proxy: {
-    //   '/api': { target: 'http://localhost:3000', changeOrigin: true },
-    // },
+    // API (apps/api) aynı adres üzerinden: çerezler ve CORS sorunsuz çalışır.
+    // Origin başlığı korunur (changeOrigin yok); API'nin CSRF kontrolü 5173'ü tanır.
+    proxy: {
+      '/api': 'http://localhost:3000',
+      '/uploads': 'http://localhost:3000',
+    },
   },
   test: {
     environment: 'jsdom',

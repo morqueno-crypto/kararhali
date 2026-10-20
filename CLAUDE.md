@@ -1,6 +1,6 @@
 # Karar Halı — proje kuralları
 
-Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site tasarımı (demo). Şu an backend yok; içerik `apps/web/src/data/` altında statiktir.
+Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site. Yol haritası: **1) backend/API (tamam) → 2) sitenin API'ye bağlanması → 3) admin paneli.** Site şu an hâlâ `apps/web/src/data/` altındaki statik veriyi okuyor; 2. aşamada API'ye geçecek (bkz. "Backend" bölümü).
 
 - Koleksiyon adları, ebatlar, model görselleri, logo ve iletişim bilgileri kararhali.com'dan alınmıştır. Koleksiyon açıklama metinleri örnektir.
 - Görseller kopyalanmaz; `VITE_ASSET_BASE_URL` (varsayılan `https://www.kararhali.com/assets/img`) üzerinden uzak URL ile yüklenir. URL'ler yalnızca `lib/assets.ts` içindeki `assetUrl()` ile üretilir. Uzak görseller `components/ui/remote-image.tsx` ile gösterilir (tembel yükleme + hata yer tutucusu).
@@ -11,13 +11,16 @@ Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temal�
 
 - pnpm workspaces + Turborepo (monorepo)
 - `apps/web`: Vite + React 19 + TypeScript (strict) + Tailwind CSS v4 + React Router (data router, loader'lar)
+- `apps/api`: Hono + Drizzle ORM + SQLite (libSQL), argon2 ile şifreleme, çerez tabanlı oturum
+- `packages/shared`: zod şemaları ve tipler (API, site ve admin paneli ortak kullanır)
 - zod (env ve form doğrulama), lucide-react (ikonlar), Fontsource (Geist: gövde metni, Bricolage Grotesque: başlıklar)
 - oxlint + Prettier, Vitest + Testing Library, GitHub Actions CI
 
 ## Komutlar (kökten)
 
-- `pnpm dev`: geliştirme sunucusu (http://localhost:5173)
-- `pnpm build`: üretim derlemesi (`apps/web/dist`)
+- `pnpm dev`: site (http://localhost:5173) ve API (http://localhost:3000/api/v1) birlikte
+- `pnpm build`: üretim derlemeleri (`apps/web/dist`, `apps/api/dist`)
+- `pnpm --filter @karar-hali/api db:seed`: migration + başlangıç verisi + ana kullanıcı (`apps/api/.env` gerekir)
 - `pnpm lint` / `pnpm typecheck` / `pnpm test`
 - `pnpm format`: Prettier
 
@@ -92,8 +95,23 @@ Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temal�
 - Yeni sayfa eklerken: `pageSegments`'e ekle, `messages`'e `nav` metnini ekle, `router.tsx`'teki `localeRoutes` içine `handle` ile tanımla.
 - Yeni dil eklerken: `config.ts`'teki `locales` listesine ekle, `messages/<dil>.ts` dosyasını oluştur, `pageSegments` ve `Localized` verilere o dilin karşılığını ekle.
 
-## Backend eklenince
+## Backend (`apps/api`)
 
-- `apps/api/` oluştur, `apps/web/vite.config.ts` içindeki `/api` proxy'sini aç, `VITE_API_URL` tanımla.
-- `services/*` fonksiyonlarını `@/lib/http` ile API çağrısına çevir; bileşenler değişmez.
-- FE ve BE'nin ortak tipleri ve şemaları için `packages/shared` oluştur.
+Ayrıntılar, uç noktalar ve yetki tablosu: [apps/api/README.md](apps/api/README.md).
+
+- **Yapı:**
+  - `src/db/`: şema, migration'lar (`drizzle/`), seed (`seed-data/`)
+  - `src/routes/`: `public.ts`, `auth.ts`, `admin/*`
+  - `src/services/`: tek dile çevirme, içerik ve ayar doğrulama
+  - `src/lib/`: hata, oturum, şifre, hız sınırı
+  - `test/`: bellek içi SQLite ile entegrasyon testleri
+- **Uygulama fabrikası:** `createApp(deps)` veritabanı ve ayarları dışarıdan alır; testler bu sayede izole çalışır.
+- **Doğrulama:** Tüm girdiler `@karar-hali/shared` içindeki zod şemalarıyla `validate()` üzerinden doğrulanır. Yeni şema önce `packages/shared`'e eklenir.
+- **Yetki:** `requireAuth` + `requireRole(...)`. Kullanıcı yönetimi yalnızca `owner`'dadır; açık kayıt yoktur.
+- **Çok dilli alanlar:** veritabanında `{ tr, en }` JSON olarak tutulur. Herkese açık uçlar `?locale=` ile tek dile indirger.
+- **İçerik ve ayarlar:** İçerik blokları (`content_blocks`) ve ayarlar (`settings`) anahtar → JSON olarak saklanır. Şemaları `packages/shared/src/schemas/content.ts` ve `settings.ts` içindedir. Yeni düzenlenebilir bölüm = yeni anahtar + şema + seed.
+- **Şema değişikliği:** `src/db/schema.ts` → `db:generate` → oluşan SQL commit'lenir. Sunucu açılışta bekleyen migration'ları uygular.
+- **Seed:** idempotent'tir; yalnızca eksikleri ekler, paneldeki değişikliklerin üzerine yazmaz.
+- **Hata biçimi:** `{ error: { code, message, details? } }`. Değiştirici isteklerde `Origin` başlığı zorunlu (CSRF).
+
+**2. aşama (site → API) için not:** Site `/api` ve `/uploads` isteklerini Vite proxy üzerinden API'ye iletir (`apps/web/vite.config.ts`). `apps/web/src/services/*` fonksiyonları `@/lib/http` ile API çağrısına çevrilecek; bileşenler mümkün olduğunca değişmeyecek. Ardından `apps/web/src/data/` silinecek. Arayüzdeki küçük sabit etiketler (menü, buton metinleri) i18n'de kalacak; sayfa içerikleri API'den gelecek.

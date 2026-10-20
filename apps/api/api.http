@@ -1,0 +1,82 @@
+### Karar Halı API — örnek istekler (VS Code REST Client / JetBrains HTTP Client)
+# Değiştirici isteklerde Origin başlığı gerekir (CSRF kontrolü); tarayıcılar bunu kendiliğinden gönderir.
+
+@base = http://localhost:3000/api/v1
+@origin = http://localhost:5173
+
+### Sağlık
+GET {{base}}/health
+
+### Site verisi (İngilizce)
+GET {{base}}/site?locale=en
+
+### Rulo kesim koleksiyonları
+GET {{base}}/collections?category=roll&locale=tr
+
+### Model detayı
+GET {{base}}/collections/laguna/models/6055a-kahve?locale=tr
+
+### İletişim formu
+POST {{base}}/contact
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "name": "Ayşe Yılmaz",
+  "email": "ayse@example.com",
+  "subject": "dealership",
+  "message": "Bayilik hakkında bilgi almak istiyorum.",
+  "locale": "tr"
+}
+
+### Giriş (çerez istemci tarafından saklanır)
+# Bilgiler apps/api/.env içindeki OWNER_EMAIL / OWNER_PASSWORD
+POST {{base}}/auth/login
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "email": "owner@example.com",
+  "password": "buraya-sifre"
+}
+
+### Oturumdaki kullanıcı
+GET {{base}}/auth/me
+
+### Panel özeti
+GET {{base}}/admin/dashboard
+
+### Yeni editör kullanıcı (yalnızca owner)
+POST {{base}}/admin/users
+Content-Type: application/json
+Origin: {{origin}}
+
+{
+  "email": "editor@example.com",
+  "name": "İçerik Editörü",
+  "password": "en-az-10-karakter",
+  "role": "editor"
+}
+
+### İçerik bloğu oku
+GET {{base}}/admin/content/home.hero
+
+### Görsel yükle
+POST {{base}}/admin/media
+Origin: {{origin}}
+Content-Type: multipart/form-data; boundary=sinir
+
+--sinir
+Content-Disposition: form-data; name="alt"
+
+Ürün görseli
+--sinir
+Content-Disposition: form-data; name="file"; filename="ornek.jpg"
+Content-Type: image/jpeg
+
+< ./ornek.jpg
+--sinir--
+
+### Çıkış
+POST {{base}}/auth/logout
+Origin: {{origin}}
