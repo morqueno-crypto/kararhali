@@ -67,6 +67,7 @@ Kurallar:
 │                                 # ileride: ui/, config/, types/ (FE+BE ortak tipler)
 ├── .github/workflows/ci.yml
 ├── .editorconfig
+├── .gitattributes                # Satır sonlarını LF'e sabitler
 ├── .gitignore
 ├── .nvmrc
 ├── .prettierrc / .prettierignore
@@ -117,7 +118,7 @@ pnpm -v
 
 ### 2. Kök (monorepo) yapısı
 - `git init` (repo değilse).
-- `package.json`, `pnpm-workspace.yaml`, `turbo.json`, `.gitignore`, `.editorconfig`, `.nvmrc`, `.prettierrc`, `.prettierignore` dosyalarını templates.md'ye göre oluştur. `packageManager` alanına `pnpm -v` çıktısını yaz.
+- `package.json`, `pnpm-workspace.yaml`, `turbo.json`, `.gitattributes`, `.gitignore`, `.editorconfig`, `.nvmrc`, `.prettierrc`, `.prettierignore` dosyalarını templates.md'ye göre oluştur. `packageManager` alanına `pnpm -v` çıktısını yaz.
 - `packages/.gitkeep` oluştur.
 - `pnpm add -Dw turbo prettier prettier-plugin-tailwindcss`
 

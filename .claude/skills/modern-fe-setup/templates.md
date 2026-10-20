@@ -55,6 +55,16 @@ packages:
 }
 ```
 
+### `.gitattributes`
+Windows'ta Git varsayılan olarak dosyaları CRLF'e çevirir; Prettier (`endOfLine: lf`) ve CI format kontrolü bozulur. İlk `git add` öncesi oluştur (sonradan eklenirse `git add --renormalize .`).
+```gitattributes
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.woff2 binary
+```
+
 ### `.gitignore`
 ```gitignore
 node_modules/
