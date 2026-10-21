@@ -1,6 +1,6 @@
 # Karar Halı — proje kuralları
 
-Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site. Yol haritası: **1) backend/API (tamam) → 2) sitenin API'ye bağlanması (tamam) → 3) admin paneli.**
+Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temalı kurumsal site + API + yönetim paneli. Yol haritası: **1) backend/API → 2) sitenin API'ye bağlanması → 3) admin paneli** (üçü de tamam).
 
 - **Veri kaynağı:** Sitedeki tüm içerik ve firma bilgileri API'den gelir (`apps/api`, SQLite). Kodda statik içerik yoktur. Başlangıç verisi API seed'indedir: koleksiyonlar, ebatlar, model görselleri, logo ve iletişim bilgileri kararhali.com'dan alınmıştır; koleksiyon açıklamaları örnek metindir.
 - **Görseller:** Tam URL (şimdilik kararhali.com) veya API'nin servis ettiği `/uploads/...` yolu olarak gelir. `components/ui/remote-image.tsx` ile gösterilir (tembel yükleme + hata yer tutucusu).
@@ -11,14 +11,15 @@ Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temal�
 - pnpm workspaces + Turborepo (monorepo)
 - `apps/web`: Vite + React 19 + TypeScript (strict) + Tailwind CSS v4 + React Router (data router, loader'lar)
 - `apps/api`: Hono + Drizzle ORM + SQLite (libSQL), argon2 ile şifreleme, çerez tabanlı oturum
+- `apps/admin`: Vite + React 19 + TanStack Query + react-hook-form (zod resolver) + Radix UI + sonner + dnd-kit; fontlar Manrope (başlık) + Inter (gövde)
 - `packages/shared`: zod şemaları ve tipler (API, site ve admin paneli ortak kullanır)
 - zod (env ve form doğrulama), lucide-react (ikonlar), Fontsource (Geist: gövde metni, Bricolage Grotesque: başlıklar)
 - oxlint + Prettier, Vitest + Testing Library, GitHub Actions CI
 
 ## Komutlar (kökten)
 
-- `pnpm dev`: site (http://localhost:5173) ve API (http://localhost:3000/api/v1) birlikte
-- `pnpm build`: üretim derlemeleri (`apps/web/dist`, `apps/api/dist`)
+- `pnpm dev`: site (http://localhost:5173), panel (http://localhost:5174) ve API (http://localhost:3000/api/v1) birlikte
+- `pnpm build`: üretim derlemeleri (`apps/web/dist`, `apps/admin/dist`, `apps/api/dist`)
 - `pnpm --filter @karar-hali/api db:seed`: migration + başlangıç verisi + ana kullanıcı (`apps/api/.env` gerekir)
 - `pnpm lint` / `pnpm typecheck` / `pnpm test`
 - `pnpm format`: Prettier
@@ -116,6 +117,22 @@ Ayrıntılar, uç noktalar ve yetki tablosu: [apps/api/README.md](apps/api/READM
 - **Şema değişikliği:** `src/db/schema.ts` → `db:generate` → oluşan SQL commit'lenir. Sunucu açılışta bekleyen migration'ları uygular.
 - **Seed:** idempotent'tir; yalnızca eksikleri ekler, paneldeki değişikliklerin üzerine yazmaz.
 - **Hata biçimi:** `{ error: { code, message, details? } }`. Değiştirici isteklerde `Origin` başlığı zorunlu (CSRF).
+
+## Yönetim paneli (`apps/admin`)
+
+Tasarım: koyu, altın vurgulu, "kart" ağırlıklı (Behance "Zoon Admin Panel" referansı). Arayüz yalnızca Türkçedir; metinler bileşenlerde doğrudan yazılır (i18n yok).
+
+- **Yapı:**
+  - `app/`: router (`routes` + tarayıcı router'ı), `providers.tsx` (QueryClient, onay diyaloğu, Toaster; testler bellek içi router verir), layout'lar
+  - `auth/`: oturum loader'ları (`requireUserLoader` → `/login?next=`), `permissions.ts` (`can(user, izin)`), `RoleGate`, `useUser()`
+  - `features/<ad>/`: `api.ts` (TanStack Query hook'ları) + sayfalar. `media` dışa `index.ts` ile açılır (`ImageField`, `MediaPicker`, `Dropzone`)
+  - `components/ui`: Button / `buttonClass`, `Field` (etiket + hata + aria, render-prop), Dialog, `useConfirm`, Tabs, Switch, Table, `SortableList` (dnd-kit), PageHeader, Thumb, feedback (Skeleton, EmptyState, QueryError)
+  - `lib/`: `http.ts` (`/api/v1` öneki, çerezli istek, `HttpError` + `fieldErrors`), `form-errors.ts` (`applyApiErrors`: API alan hatalarını forma yazar), `format.ts`
+- **Veri:** Bileşenler `fetch` çağırmaz; her özellik `features/<ad>/api.ts` hook'larını kullanır. Değişiklikten sonra ilgili sorgular (ve panel özeti) geçersiz kılınır; sıralama iyimser güncellenir.
+- **Formlar:** react-hook-form + `zodResolver(<@karar-hali/shared şeması>)`. Doğrulama kuralları paylaşılan şemadadır, panelde tekrar yazılmaz. Sunucu hataları `applyApiErrors` ile alan bazında gösterilir.
+- **İçerik düzenleyici:** `features/content/blocks.ts`, her içerik anahtarının alanlarını (etiket + kontrol tipi: text, textarea, image, stringList, imageList, items, stats) tanımlar. Yeni içerik bloğu = şema (`packages/shared`) + seed (API) + `blockDefs` girdisi. İki dilde aynı olan görseller birlikte güncellenir.
+- **Yetki:** `can()` yalnızca arayüzü gizler; asıl kontrol API'dedir. Sayfalar `RoleGate` ile sarılır, menü role göre filtrelenir. İzinler API ile aynı tutulmalıdır.
+- **Testler:** Site testleri gibi gerçek API'yi aynı süreçte kullanır (`src/test/api.ts`: çerez kavanozu + Origin başlığı). `signIn()` ile oturum açılır, `renderApp(path)` paneli bellek içi router ile açar. API giriş denemelerini dakikada 5 ile sınırladığı için bir test dosyasında 5'ten fazla giriş yapılmaz.
 
 ## Site ↔ API
 

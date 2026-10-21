@@ -1,0 +1,104 @@
+@import 'tailwindcss';
+
+/*
+ * Yönetim paneli tasarım token'ları (koyu tema).
+ * Uzun süreli kullanım için neredeyse siyah zemin; tek bir sıcak altın vurgu yalnızca tıklanacak
+ * şeyler için. Durum renkleri: success (aktif/yayında), warning (bekleyen), danger (engelli/silme).
+ */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Manrope Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+
+  --color-canvas: oklch(0.145 0.002 285);
+  --color-surface: oklch(0.185 0.003 285);
+  --color-raised: oklch(0.225 0.004 285);
+  --color-line: oklch(0.285 0.005 285);
+  --color-line-strong: oklch(0.36 0.006 285);
+
+  --color-ink: oklch(0.97 0.002 285);
+  --color-muted: oklch(0.74 0.008 285);
+  --color-subtle: oklch(0.56 0.01 285);
+
+  --color-accent: oklch(0.83 0.15 88);
+  --color-accent-strong: oklch(0.88 0.15 92);
+  --color-on-accent: oklch(0.2 0.02 85);
+
+  --color-success: oklch(0.76 0.17 155);
+  --color-warning: oklch(0.8 0.15 65);
+  --color-danger: oklch(0.68 0.19 25);
+  --color-info: oklch(0.72 0.12 250);
+
+  /* Beyaz zeminli ürün fotoğrafları için açık yüzey */
+  --color-paper: oklch(0.97 0.003 85);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-fade-in: fade-in 0.25s var(--ease-out-expo) both;
+  --animate-scale-in: scale-in 0.25s var(--ease-out-expo) both;
+  --animate-slide-in: slide-in 0.3s var(--ease-out-expo) both;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -48%) scale(0.97);
+    }
+  }
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(-100%);
+    }
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-sm text-ink;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight;
+  }
+
+  ::selection {
+    @apply bg-accent text-on-accent;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+
+  /* İnce, koyu kaydırma çubukları */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

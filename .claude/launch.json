@@ -6,6 +6,12 @@
       "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
       "runtimeArgs": ["apps/web/node_modules/vite/bin/vite.js", "apps/web", "--port", "5173", "--strictPort"],
       "port": 5173
+    },
+    {
+      "name": "admin",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["apps/admin/node_modules/vite/bin/vite.js", "apps/admin", "--port", "5174", "--strictPort"],
+      "port": 5174
     }
   ]
 }

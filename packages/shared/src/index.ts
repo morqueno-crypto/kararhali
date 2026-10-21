@@ -1,3 +1,4 @@
+export * from './schemas/admin'
 export * from './schemas/catalog'
 export * from './schemas/common'
 export * from './schemas/content'

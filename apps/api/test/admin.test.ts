@@ -317,7 +317,23 @@ describe('yönetim API', () => {
       const { cookie } = await createUser('admin')
 
       const dashboard = await (await t.request('/api/v1/admin/dashboard', { cookie })).json()
-      expect(dashboard).toMatchObject({ collectionCount: 22, newMessages: 1, userCount: 2 })
+      expect(dashboard).toMatchObject({
+        collectionCount: 22,
+        newMessages: 1,
+        userCount: 2,
+        collectionsByCategory: { carpet: 9, roll: 13 },
+      })
+      expect(dashboard.messagesByDay).toHaveLength(14)
+      expect(dashboard.messagesByDay.at(-1).count).toBe(1)
+      expect(dashboard.recentMessages[0].name).toBe('Ali')
+
+      // Editor mesaj içeriklerini panel özetinde de göremez
+      const { cookie: editorCookie } = await createUser('editor')
+      const editorView = await (
+        await t.request('/api/v1/admin/dashboard', { cookie: editorCookie })
+      ).json()
+      expect(editorView.recentMessages).toEqual([])
+      expect(editorView.newMessages).toBe(0)
 
       const list = await (await t.request('/api/v1/admin/messages?status=new', { cookie })).json()
       expect(list.total).toBe(1)
