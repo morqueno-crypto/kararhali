@@ -12,15 +12,24 @@ function renderRoute(path: string) {
 }
 
 describe('router', () => {
-  it('Türkçe ana sayfayı render eder', async () => {
+  it('Türkçe ana sayfayı üretim yolculuğuyla açar', async () => {
     renderRoute('/tr')
-    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent('Kararsız kalmayın.')
+    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(
+      'Bir halının yolculuğu',
+    )
+    // Testlerde reduced-motion açık: bölümler sahnesiz liste olarak, sırasıyla görünür
+    const chapters = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)
+    expect(chapters.slice(0, 2)).toEqual(['Her şey bir iple başlar', 'Desen tezgâha işlenir'])
+    expect(chapters).toContain('İnce overlok, beyaz saçak')
+    expect(
+      screen.getByRole('heading', { level: 2, name: /Ve sonunda evinizde/ }),
+    ).toBeInTheDocument()
   })
 
   it('İngilizce ana sayfayı render eder', async () => {
     renderRoute('/en')
     expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(
-      'Decide with confidence.',
+      'The journey of a carpet',
     )
   })
 

@@ -20,6 +20,8 @@
 
   --color-accent: oklch(0.78 0.13 70);
   --color-accent-strong: oklch(0.84 0.14 75);
+  /* İkincil sıcak vurgu (kiremit / yün kırmızısı): degradeler ve canlı detaylar için. */
+  --color-accent-2: oklch(0.68 0.17 38);
   --color-on-accent: oklch(0.18 0.02 60);
 
   /* Ürün fotoğrafları beyaz zeminli; kartlarda bu açık yüzey kullanılır. */
@@ -34,24 +36,17 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
 
-  /*
-   * "backwards": animasyon bitince sarmalayıcıda transform KALMAZ. Kalırsa ata eleman
-   * position: fixed için referans kutusu olur ve ScrollTrigger pin'leri kayar.
-   */
-  --animate-page-in: page-in 0.45s var(--ease-out-expo) backwards;
   --animate-shuttle: shuttle 2.4s var(--ease-in-out-soft) infinite;
   --animate-spin-slow: spin 6s linear infinite;
   --animate-float: float 3s var(--ease-in-out-soft) infinite;
   --animate-snip: snip 0.9s var(--ease-in-out-soft) infinite;
   --animate-sweep: sweep 3.2s var(--ease-in-out-soft) infinite;
   --animate-draw: draw 3s var(--ease-in-out-soft) infinite;
-
-  @keyframes page-in {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-  }
+  --animate-ken-burns: ken-burns 14s ease-in-out infinite alternate;
+  --animate-slide-progress: slide-progress linear forwards;
+  --animate-count-in: count-in 0.7s var(--ease-out-expo) both;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-scroll-cue: scroll-cue 1.8s var(--ease-in-out-soft) infinite;
 
   @keyframes shuttle {
     0%,
@@ -90,6 +85,46 @@
     }
     50% {
       transform: translate(var(--sweep-x, 90px), var(--sweep-y, 40px));
+    }
+  }
+
+  @keyframes ken-burns {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.12);
+    }
+  }
+
+  @keyframes slide-progress {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  @keyframes count-in {
+    from {
+      opacity: 0;
+      transform: translateY(60%);
+    }
+  }
+
+  @keyframes scroll-cue {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(200%);
+    }
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
     }
   }
 
@@ -135,6 +170,123 @@
   }
 }
 
+/* İçi boş (konturlu) yazı: kayan şeritte dolu yazıyla dönüşümlü kullanılır. */
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-accent);
+}
+
+/*
+ * Sayfa geçişleri (React <ViewTransition>, bkz. app/layouts/root-layout.tsx).
+ * - Kök (root) çapraz geçişi kapalı: isimsiz bölgeler canlı kalır, yalnızca sayfa ve paylaşılan öğeler animasyonludur.
+ * - Üst menü sabit kalır (site-header).
+ * - Kart görseli → detay görseli "morph" ile büyür (share="morph").
+ */
+:root {
+  --vt-exit: 220ms;
+  --vt-enter: 420ms;
+  --vt-move: 600ms;
+}
+
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(root) {
+  display: none;
+}
+
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+::view-transition-old(.page-exit) {
+  animation: var(--vt-exit) cubic-bezier(0.4, 0, 1, 1) both vt-page-out;
+}
+
+::view-transition-new(.page-enter) {
+  animation: var(--vt-enter) var(--ease-out-expo) calc(var(--vt-exit) * 0.6) both vt-page-in;
+}
+
+::view-transition-group(.morph) {
+  animation-duration: var(--vt-move);
+  animation-timing-function: var(--ease-out-expo);
+  z-index: 50;
+}
+
+::view-transition-image-pair(.morph) {
+  animation-name: vt-via-blur;
+}
+
+/* Liste filtrelenince kartlar yeni yerlerine kayar, çıkan/giren kartlar ölçeklenerek kaybolur/belirir */
+::view-transition-group(.card-move) {
+  animation-duration: 500ms;
+  animation-timing-function: var(--ease-out-expo);
+}
+
+::view-transition-new(.card-in) {
+  animation: 420ms var(--ease-out-expo) 120ms both vt-scale-in;
+}
+
+::view-transition-old(.card-out) {
+  animation: 200ms ease-in both vt-scale-out;
+}
+
+@keyframes vt-page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+
+@keyframes vt-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@keyframes vt-via-blur {
+  30% {
+    filter: blur(4px);
+  }
+}
+
+@keyframes vt-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+
+@keyframes vt-scale-out {
+  to {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
 /*
  * <Reveal> giriş animasyonları. Gizli başlangıç durumu SADECE hareket izni varken uygulanır;
  * reduced-motion açıksa içerik baştan görünür.

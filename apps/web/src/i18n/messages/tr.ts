@@ -19,7 +19,6 @@ export const tr = {
     homeLink: (name: string) => `${name} ana sayfa`,
     language: 'Dil seçimi',
     backHome: 'Ana sayfaya dön',
-    skipIntro: 'Girişi geç',
     explore: 'Keşfet',
     zoom: 'Görseli büyüt',
     close: 'Kapat',
@@ -32,6 +31,23 @@ export const tr = {
   },
   home: {
     storyStep: (current: number, total: number) => `Adım ${current} / ${total}`,
+    journey: {
+      chapter: (current: number, total: number) => `Bölüm ${current} / ${total}`,
+      chapters: 'Hikâye bölümleri',
+      goTo: (label: string) => `${label} bölümüne git`,
+      skip: 'Hikâyeyi atla',
+    },
+    slider: {
+      label: 'Evinizde',
+      slide: (current: number, total: number) => `Slayt ${current} / ${total}`,
+      goTo: (index: number) => `${index}. slayta git`,
+      previous: 'Önceki slayt',
+      next: 'Sonraki slayt',
+      pause: 'Otomatik geçişi durdur',
+      play: 'Otomatik geçişi başlat',
+      upNext: 'Sıradaki',
+      scroll: 'Aşağı kaydır',
+    },
   },
   about: {
     fairAlt: (index: number) => `Fuar standımızdan bir kare (${index})`,

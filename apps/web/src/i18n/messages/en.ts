@@ -21,7 +21,6 @@ export const en: Messages = {
     homeLink: (name) => `${name} home`,
     language: 'Language',
     backHome: 'Back to home',
-    skipIntro: 'Skip intro',
     explore: 'Explore',
     zoom: 'Enlarge image',
     close: 'Close',
@@ -34,6 +33,23 @@ export const en: Messages = {
   },
   home: {
     storyStep: (current, total) => `Step ${current} / ${total}`,
+    journey: {
+      chapter: (current, total) => `Chapter ${current} of ${total}`,
+      chapters: 'Story chapters',
+      goTo: (label) => `Go to ${label}`,
+      skip: 'Skip the story',
+    },
+    slider: {
+      label: 'In your home',
+      slide: (current, total) => `Slide ${current} of ${total}`,
+      goTo: (index) => `Go to slide ${index}`,
+      previous: 'Previous slide',
+      next: 'Next slide',
+      pause: 'Pause autoplay',
+      play: 'Start autoplay',
+      upNext: 'Up next',
+      scroll: 'Scroll down',
+    },
   },
   about: {
     fairAlt: (index) => `A view from our trade fair stand (${index})`,

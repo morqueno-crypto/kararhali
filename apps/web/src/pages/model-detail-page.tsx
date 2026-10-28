@@ -1,11 +1,12 @@
 import { ArrowLeft, ArrowRight, Info } from 'lucide-react'
+import { ViewTransition } from 'react'
 import { Link, useLoaderData } from 'react-router'
 import { ButtonLink } from '@/components/ui/button-link'
 import { Container } from '@/components/ui/container'
 import { PageMeta } from '@/components/ui/page-meta'
 import { RemoteImage } from '@/components/ui/remote-image'
 import { Reveal } from '@/components/ui/reveal'
-import { ImageZoom, ModelCard, SizeList } from '@/features/collections'
+import { ImageZoom, ModelCard, modelImageTransition, SizeList } from '@/features/collections'
 import { useI18n } from '@/i18n'
 import { cn } from '@/lib/cn'
 import type { modelDetailLoader } from './model-detail-loader'
@@ -39,7 +40,20 @@ export function ModelDetailPage() {
           <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-6">
               <div className="mx-auto max-w-md lg:sticky lg:top-28 lg:max-w-none">
-                <ImageZoom src={model.image} alt={labels.imageAlt(model.code, model.color)} />
+                {/*
+                 * Paylaşılan öğe: koleksiyondaki model kartı ya da renk seçeneği küçük görseli buraya büyür.
+                 * key ile renk değişiminde yeniden takılır; böylece eski ana görsel de küçük görsele döner.
+                 */}
+                <ViewTransition
+                  key={model.slug}
+                  name={modelImageTransition(collection.slug, model.slug)}
+                  share="morph"
+                  default="none"
+                >
+                  <div>
+                    <ImageZoom src={model.image} alt={labels.imageAlt(model.code, model.color)} />
+                  </div>
+                </ViewTransition>
                 <p className="mt-3 text-center text-xs text-subtle">{labels.zoomHint}</p>
               </div>
             </div>
@@ -92,7 +106,8 @@ export function ModelDetailPage() {
                   </h2>
                   <ul className="mt-4 flex flex-wrap gap-3">
                     {variants.map((variant) => (
-                      <li key={variant.slug}>
+                      // Seçili olma durumu değişince yeniden takılır (paylaşılan öğe eşleşmesi için)
+                      <li key={`${variant.slug}-${variant.slug === model.slug}`}>
                         <Link
                           to={path('modelDetail', { slug: collection.slug, model: variant.slug })}
                           aria-current={variant.slug === model.slug ? 'page' : undefined}
@@ -103,13 +118,17 @@ export function ModelDetailPage() {
                               : 'border-line text-muted hover:border-ink/40 hover:text-ink',
                           )}
                         >
-                          <span className="size-9 overflow-hidden rounded-full bg-paper">
-                            <RemoteImage
-                              src={variant.image}
-                              alt=""
-                              className="size-full object-cover"
-                            />
-                          </span>
+                          {variant.slug === model.slug ? (
+                            <VariantThumb image={variant.image} />
+                          ) : (
+                            <ViewTransition
+                              name={modelImageTransition(collection.slug, variant.slug)}
+                              share="morph"
+                              default="none"
+                            >
+                              <VariantThumb image={variant.image} />
+                            </ViewTransition>
+                          )}
                           {variant.color}
                         </Link>
                       </li>
@@ -142,5 +161,13 @@ export function ModelDetailPage() {
         </section>
       )}
     </>
+  )
+}
+
+function VariantThumb({ image }: { image: string }) {
+  return (
+    <span className="size-9 overflow-hidden rounded-full bg-paper">
+      <RemoteImage src={image} alt="" className="size-full object-cover" />
+    </span>
   )
 }

@@ -1,3 +1,4 @@
-export { CategorySplit } from './components/category-split'
+﻿export { CategorySplit } from './components/category-split'
 export { FeaturedStrip } from './components/featured-strip'
-export { HeroSection } from './components/hero-section'
+export { HeroSlider } from './components/hero-slider'
+export { MarqueeBand } from './components/marquee-band'

@@ -19,9 +19,62 @@ const heading = {
 }
 
 const item = z.object({ title: text, text: longText })
+const slide = z.object({
+  image: imageRefSchema,
+  imageAlt: text,
+  eyebrow: text,
+  title: text,
+  /** Başlıkta vurgulanacak kelime(ler); boş olabilir. */
+  titleAccent: optionalText,
+  text: longText,
+})
 const stat = z.object({ value: z.string().trim().min(1).max(30), label: text })
 
+/**
+ * Ana sayfadaki üretim yolculuğunun bölümleri. Sıra ve anahtarlar sabittir: her bölümün sahnesi
+ * (animasyonu) sitede koddadır; metinleri panelden düzenlenir.
+ */
+export const journeyChapterKeys = [
+  'creel',
+  'warp',
+  'weaving',
+  'shearing',
+  'binding',
+  'quality',
+  'packing',
+  'shipping',
+] as const
+export type JourneyChapterKey = (typeof journeyChapterKeys)[number]
+
+const chapter = z.object({
+  /** Kısa ad (ilerleme çubuğunda) */
+  label: z.string().trim().min(1).max(40),
+  title: text,
+  text: longText,
+  /** Öne çıkan kısa bilgi */
+  fact: text,
+})
+
+const chapters = z.object(
+  Object.fromEntries(journeyChapterKeys.map((key) => [key, chapter])) as Record<
+    JourneyChapterKey,
+    typeof chapter
+  >,
+)
+
 export const contentBlockSchemas = {
+  /** Ana sayfa: tezgâhtan sevkiyata üretim hikâyesi */
+  'home.journey': localized(
+    z.object({
+      ...heading,
+      text: longText,
+      scrollCue: text,
+      chapters,
+      finaleEyebrow: text,
+      finaleTitle: text,
+      finaleTitleAccent: optionalText,
+    }),
+  ),
   'home.hero': localized(
     z.object({
       ...heading,
@@ -32,6 +85,8 @@ export const contentBlockSchemas = {
       imageAlt: text,
     }),
   ),
+  /** Ana sayfa giriş slaytları (butonlar home.hero'dan gelir) */
+  'home.slides': localized(z.object({ items: z.array(slide).min(1).max(8) })),
   'home.featured': localized(z.object({ ...heading, description: longText, cta: text })),
   'home.categories': localized(
     z.object({

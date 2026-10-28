@@ -1,3 +1,4 @@
+import { ViewTransition } from 'react'
 import { useSearchParams } from 'react-router'
 import { useI18n } from '@/i18n'
 import { cn } from '@/lib/cn'
@@ -52,8 +53,17 @@ export function CollectionBrowser({ collections }: { collections: Collection[] }
       </div>
 
       <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Filtre değişince kartlar yeni yerlerine kayar; çıkanlar küçülerek kaybolur, girenler belirir */}
         {visible.map((collection) => (
-          <CollectionCard key={collection.slug} collection={collection} />
+          <ViewTransition
+            key={collection.slug}
+            enter="card-in"
+            exit="card-out"
+            update="card-move"
+            default="none"
+          >
+            <CollectionCard collection={collection} />
+          </ViewTransition>
         ))}
       </div>
 

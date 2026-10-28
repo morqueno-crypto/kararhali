@@ -66,6 +66,23 @@ describe('içerik düzenleyici', () => {
   })
 })
 
+describe('üretim yolculuğu', () => {
+  it('bir bölümün başlığını (iç içe alan) kaydeder', async () => {
+    const { user } = renderApp('/content/home.journey')
+
+    const panel = await screen.findByRole('tabpanel', { name: 'Türkçe' })
+    // Her bölümde bir "Başlık" alanı var; ilk ikisi giriş ve iplik bölümü
+    const title = within(panel).getAllByLabelText('Başlık')[1]!
+    await user.clear(title)
+    await user.type(title, 'İplik tezgâha yola çıkar')
+    await user.click(screen.getByRole('button', { name: 'Kaydet' }))
+
+    expect(await screen.findByText(/kaydedildi/)).toBeInTheDocument()
+    const site = await (await testApi().request('/api/v1/site?locale=tr')).json()
+    expect(site.content['home.journey'].chapters.creel.title).toBe('İplik tezgâha yola çıkar')
+  })
+})
+
 describe('renkler', () => {
   it('aynı kodla ikinci renk eklenince alan hatası gösterir', async () => {
     const { user } = renderApp('/colors')

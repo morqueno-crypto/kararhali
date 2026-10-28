@@ -1,11 +1,17 @@
 import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ViewTransition } from 'react'
 import { Link, useLoaderData } from 'react-router'
 import { ButtonLink } from '@/components/ui/button-link'
 import { Container } from '@/components/ui/container'
 import { PageMeta } from '@/components/ui/page-meta'
 import { RemoteImage } from '@/components/ui/remote-image'
 import { SectionHeading } from '@/components/ui/section-heading'
-import { CollectionCard, ModelCard, SizeList } from '@/features/collections'
+import {
+  CollectionCard,
+  collectionImageTransition,
+  ModelCard,
+  SizeList,
+} from '@/features/collections'
 import { useI18n } from '@/i18n'
 import type { collectionDetailLoader } from './collection-detail-loader'
 
@@ -20,13 +26,18 @@ export function CollectionDetailPage() {
       <PageMeta title={collection.name} description={collection.description} />
 
       <section className="relative isolate overflow-hidden border-b border-line">
-        <RemoteImage
-          src={collection.cover}
-          alt={collection.name}
-          loading="eager"
-          fetchPriority="high"
-          className="absolute inset-0 -z-20 size-full object-cover"
-        />
+        {/* Listedeki kart görseli buraya büyüyerek gelir (shared element) */}
+        <ViewTransition name={collectionImageTransition(collection.slug)} share="morph">
+          <div className="absolute inset-0 -z-20 overflow-hidden">
+            <RemoteImage
+              src={collection.cover}
+              alt={collection.name}
+              loading="eager"
+              fetchPriority="high"
+              className="size-full object-cover motion-safe:animate-ken-burns"
+            />
+          </div>
+        </ViewTransition>
         <div
           className="absolute inset-0 -z-10 bg-linear-to-t from-canvas via-canvas/75 to-canvas/30"
           aria-hidden="true"

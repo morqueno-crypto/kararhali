@@ -36,7 +36,7 @@ Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temal�
 - `services/`: API ile konuşan tek katman (`site.ts`, `collections.ts`, `contact.ts`); istekler `lib/http.ts` üzerinden
 - `config/`: env.ts, site.ts (menü yapısı) · `lib/`: yardımcılar · `types/`: `@karar-hali/shared` tiplerinin kısa adları
 - `test/`: `api.ts` (testlerde gerçek API'yi bellek içi veritabanıyla aynı süreçte çalıştırır), `media.ts` (matchMedia sahtesi)
-- `styles/globals.css`: Tailwind + `@theme` içinde anlamsal (rol bazlı) koyu tema token'ları: `canvas` (sayfa zemini), `surface` / `raised` (kart yüzeyleri), `line` (çizgiler), `ink` / `muted` / `subtle` (metin seviyeleri), `accent` / `accent-strong` / `on-accent` (vurgu), `paper` (beyaz zeminli ürün fotoğrafları için açık yüzey). Bileşenlerde ham renk (`bg-stone-900`, `#fff` vb.) kullanılmaz; açık tema eklenecekse sadece bu token değerleri değişir.
+- `styles/globals.css`: Tailwind + `@theme` içinde anlamsal (rol bazlı) koyu tema token'ları: `canvas` (sayfa zemini), `surface` / `raised` (kart yüzeyleri), `line` (çizgiler), `ink` / `muted` / `subtle` (metin seviyeleri), `accent` / `accent-strong` / `on-accent` (vurgu), `accent-2` (ikincil sıcak vurgu; altın → kiremit degradeleri), `paper` (beyaz zeminli ürün fotoğrafları için açık yüzey). Bileşenlerde ham renk (`bg-stone-900`, `#fff` vb.) kullanılmaz; açık tema eklenecekse sadece bu token değerleri değişir.
 
 ## Mimari kurallar
 
@@ -55,9 +55,10 @@ Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temal�
 
 **Kütüphaneler**
 
-- **GSAP + ScrollTrigger** (`@gsap/react` → `useGSAP`): pin'li, kaydırmaya bağlı (scrub) sahneler ve hero girişi.
+- **GSAP + ScrollTrigger** (`@gsap/react` → `useGSAP`): ana sayfadaki üretim yolculuğu (`features/journey`), pin'li/scrub sahneler ve mekân slaytları (`features/home/components/hero-slider.tsx`).
+- **React View Transitions** (`<ViewTransition>`, React 19.3): sayfa geçişleri ve paylaşılan öğe "morph"ları (bkz. "Sayfa geçişleri").
 - **Lenis**: yumuşak kaydırma. Tüm sayfalarda `RootLayout` içindeki `SmoothScrollProvider` ile çalışır.
-- **CSS / Tailwind**: hover efektleri, mikro etkileşimler, `Reveal` giriş animasyonları, sayfa geçişi.
+- **CSS / Tailwind**: hover efektleri, mikro etkileşimler, `Reveal` giriş animasyonları, Ken Burns yakınlaşması, kayan isim şeridi (`MarqueeBand`).
 
 **`lib/motion/` yapısı**
 
@@ -73,12 +74,35 @@ Karar Halı (kararhali.com) için iki dilli (Türkçe / İngilizce), koyu temal�
 
 - **Reduced-motion zorunlu:** `prefers-reduced-motion: reduce` açıksa GSAP sahneleri kurulmaz, Lenis oluşturulmaz, `Reveal` içeriği baştan görünür. CSS tarafında gizli başlangıç durumları yalnızca `@media (prefers-reduced-motion: no-preference)` içinde tanımlanır.
 - **Ağır efektler:** tilt, mıknatıs ve özel imleç yalnızca `FINE_POINTER_QUERY` koşulunda çalışır. Pin'li yatay şerit ve üretim hikâyesi yalnızca `DESKTOP_MOTION_QUERY` koşulunda çalışır; mobilde basit liste olur.
-- **Performans:** yalnızca `transform` ve `opacity` animasyonu yapılır. Tek istisna hero girişindeki tek seferlik `clip-path`.
-- **Pin ve transform:** pin'li bir elemanın atalarında `transform` kalmamalı. Kalırsa o ata `position: fixed` için referans kutusu olur ve pin kayar. Bu yüzden sayfa geçişi animasyonu `backwards` dolgu moduyla çalışır.
+- **Performans:** yalnızca `transform` ve `opacity` animasyonu yapılır. Tek istisna giriş slaytlarındaki perde geçişi (`clip-path`).
+- **Pin ve transform:** pin'li bir elemanın atalarında `transform` kalmamalı. Kalırsa o ata `position: fixed` için referans kutusu olur ve pin kayar. Sayfa geçişleri bu yüzden DOM'a transform yazmayan View Transitions ile yapılır.
 - **`Reveal variant="mask"`:** sarmalayan eleman `overflow: hidden` olmalıdır. Gözlem kaydırılan elemanda değil, ebeveynde yapılır (kırpılan eleman hiç "görünür" sayılmaz).
 - **Vurgulu kelimeler:** metin ve vurgu ayrı i18n anahtarlarıdır (`title` + `titleAccent`). `<Emphasis text accent />` veya `SectionHeading` / `PageHero` bileşenlerinin `titleAccent` prop'u kullanılır.
 
-**Yeni bir scroll animasyonu eklemek**
+**Ana sayfa: üretim yolculuğu (`features/journey`)**
+
+- Girişteki çözgü iplikleri imlece duyarlıdır (`use-thread-pluck.ts`): imleç yaklaşınca iki yana aralanır, uzaklaşınca yay fiziğiyle titreyerek yerine döner. Reduced-motion'da kapalıdır.
+- Akış: `JourneyIntro` (sayfanın `h1`'i) → `JourneyStory` (pin'li sahne, 8 bölüm) → `JourneyFinale` ("ve sonunda evinizde") → `HeroSlider` (mekân slaytları).
+- Bölümler sabittir: `journeyChapterKeys` (iplik, tezgâh, dokuma, tıraş, konfeksiyon, kontrol, paketleme, sevkiyat). Metinleri `home.journey` bloğundan (panelde "Üretim yolculuğu"), sahneleri koddan gelir. Bölüm eklemek = anahtar + şema + seed + sahne + timeline.
+- Sahne tek bir SVG'dir (`journey-scene.tsx`, 1000×640; ölçüler `scene-geometry.ts`'te); aynı halı tezgâhta dokunur, ortaya gelir, dikilir, rulo olur, kamyona yüklenir. Dokunan desen gerçek bir halı görselidir (`journey/assets/carpet-pattern.jpg`, 640×1001): sitenin paletine (krem zemin, altın/kiremit süsleme, gece mavisi) dijital olarak uyarlanmıştır ve alttan yukarı büyüyen bir `clipPath` ile sıra sıra açılır. Desen değişirse görselin en/boy oranını `scene-geometry.ts`'teki `PATTERN_RATIO`'da güncelleyin. Overlok uzun kenarlarda ince ilmekli bir şerittir (SVG `pattern`, iğne indikçe `clipPath` ile açılır); saçaklar kısa kenarlarda iki büküm ipli, kısa ve beyazdır. Dokumada kamera (`data-j="camera"`) tezgâha yaklaşır. Geçişler: tezgâh sola itilir (push), halı sahnenin ortasına süzülür, rulo kamyondaki yuvasına süzülür (morph; konumlar `placeCarpet` ile hesaplanır). Bölüm metinlerinde numara/ikon sayaç gibi döner, başlık kelimeleri maskeden yükselir. Kelime kaydırmaları piksel ile yapılır (gizli panellerde `yPercent` tutarsız okunuyor). Bütün hareket `build-journey-timeline.ts`'teki tek zaman çizelgesindedir: her bölüm 1 birim, toplam süre = bölüm sayısı; ScrollTrigger bunu pin + scrub ile kaydırmaya bağlar. Bölüm metinleri ve ilerleme çubuğu da aynı çizelgededir.
+- SVG öğelerini ölçeklerken başlangıç ölçeği 0 değil `HIDDEN_SCALE` (0.001) olmalı ve merkez `transformOrigin` ile verilmeli; fonksiyonla verilen `svgOrigin` sonraki tween'lerde öğeyi sahnenin dışına öteliyor.
+- Snap kullanılmaz (Lenis ile çakışıp bölüm atlatıyor). Her bölümün animasyonu aralığının ilk ~%90'ında biter, kalan kısımda sahne durur. İlerleme çubuğundaki bölüm düğmeleri `chapterRestPoints`'e kaydırır.
+- Reduced-motion'da sahne yoktur; bölümler ikonlu dikey liste olur (testler bu yolu kullanır).
+
+**Mekân slaytları (`HeroSlider`)**
+
+- İçerik `home.slides` bloğundan gelir (panelde "Evinizde slaytları"); butonlar `home.hero`'dan. Sayfanın `h1`'i slaytlarda değil, yolculuk girişindedir.
+- Otomatik geçişi ilerleme çubuğunun CSS animasyonu yönetir (`animationend` → sonraki slayt); durdur düğmesi, sekme gizliyken ve klavye odağı içerideyken bekler. Reduced-motion'da otomatik geçiş yoktur.
+- Görünmeyen slaytlar `inert` + `aria-hidden`'dır. Kontrolleri `visibility` ile gizleyen animasyon (GSAP `autoAlpha`) kullanma: gizli öğenin erişilebilir adı boş olur.
+
+**Sayfa geçişleri (View Transitions)**
+
+- `RootLayout`, `<Outlet />`'i anahtarlı bir `<ViewTransition enter="page-enter" exit="page-exit">` ile sarar. Anahtar adres yoludur; model detayında aynı desenin renkleri arasında geçiş sayfayı değiştirmez. React Router durum güncellemelerini `startTransition` ile yaptığı için geçişler kendiliğinden tetiklenir; `document.startViewTransition` elle çağrılmaz.
+- Kart → detay görselleri paylaşılan isimlerle "morph" olur: isimler `features/collections/transition-names.ts`'tedir (`collection-image-<slug>`, `model-image-<koleksiyon>-<model>`). Aynı isim ekranda aynı anda tek olmalıdır; liste tarafında `default="none"` kullanılır.
+- Koleksiyon filtresinde kartlar `card-in` / `card-out` / `card-move` sınıflarıyla yer değiştirir.
+- Üst menü `site-header` adıyla sabitlenir; kök çapraz geçişi kapalıdır (isimsiz bölgeler canlı kalır). CSS tarifleri ve reduced-motion kuralı `styles/globals.css`'te.
+- `RemoteImage` önbellekteki görseli takıldığı anda görünür yapar; yoksa yeni görünümün anlık görüntüsü görsel saydamken alınır.
+  **Yeni bir scroll animasyonu eklemek**
 
 1. Bileşeni ilgili `features/<ad>/` altında yaz. `gsap` ve `useGSAP`'ı `@/lib/motion/gsap`'tan import et.
 2. Animasyonu `useGSAP(() => { ... }, { scope, dependencies })` içinde kur. Seçicileri `scope` ile sınırla; temizleme otomatiktir.

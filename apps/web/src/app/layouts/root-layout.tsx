@@ -1,9 +1,16 @@
-import { useEffect } from 'react'
-import { Outlet, ScrollRestoration, useLoaderData, useMatches, useNavigation } from 'react-router'
+import { useEffect, ViewTransition } from 'react'
+import {
+  Outlet,
+  ScrollRestoration,
+  useLoaderData,
+  useLocation,
+  useMatches,
+  useNavigation,
+} from 'react-router'
 import { CustomCursor } from '@/components/layout/custom-cursor'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
-import { LocaleContext, messages, type Locale } from '@/i18n'
+import { LocaleContext, messages, type Locale, type RouteHandle } from '@/i18n'
 import { cn } from '@/lib/cn'
 import { SmoothScrollProvider } from '@/lib/motion/smooth-scroll-provider'
 import type { SiteData } from '@/services/site'
@@ -14,8 +21,7 @@ export function RootLayout({ locale }: { locale: Locale }) {
   const site = useLoaderData<SiteData>()
   const navigation = useNavigation()
   const loading = navigation.state === 'loading'
-  // Sayfa geçişi yalnızca route değişince oynar (aynı sayfada parametre değişimi, ör. renk seçimi, oynatmaz).
-  const routeId = useMatches().at(-1)?.id
+  const transitionKey = usePageTransitionKey()
 
   // <html lang> sayfanın diliyle senkron tutulur (erişilebilirlik ve SEO).
   useEffect(() => {
@@ -42,9 +48,20 @@ export function RootLayout({ locale }: { locale: Locale }) {
             />
             <SiteHeader />
             <main id="main" className="flex-1">
-              <div key={routeId} className="motion-safe:animate-page-in">
-                <Outlet />
-              </div>
+              {/*
+               * Sayfa geçişi (React View Transition): anahtar değişince eski sayfa yukarı kayarak çıkar,
+               * yenisi alttan gelir. Kart → detay görselleri ayrıca "morph" ile büyür (paylaşılan isimler).
+               */}
+              <ViewTransition
+                key={transitionKey}
+                enter="page-enter"
+                exit="page-exit"
+                default="none"
+              >
+                <div>
+                  <Outlet />
+                </div>
+              </ViewTransition>
             </main>
             <SiteFooter />
             <CustomCursor />
@@ -57,4 +74,20 @@ export function RootLayout({ locale }: { locale: Locale }) {
       </SiteContext>
     </LocaleContext>
   )
+}
+
+/**
+ * Sayfa geçişinin anahtarı: adres. İstisna: model detayında aynı desenin renkleri arasında geçiş
+ * sayfayı değiştirmez; yalnızca görsel değişir (bkz. model-detail-page). Arama parametreleri
+ * (ör. koleksiyon filtresi) adresin yol kısmını değiştirmediği için sayfa geçişi oynatmaz.
+ */
+function usePageTransitionKey() {
+  const match = useMatches().at(-1)
+  const location = useLocation()
+  const page = (match?.handle as RouteHandle | undefined)?.page
+  // Model adresi "<desen>-<renk>" biçimindedir (ör. 6055a-kahve); aynı desen = aynı sayfa
+  if (page === 'modelDetail') {
+    return `model:${match?.params.slug}:${match?.params.model?.split('-')[0]}`
+  }
+  return location.pathname
 }

@@ -1,4 +1,4 @@
-import type { ContentKey } from '@karar-hali/shared'
+import { journeyChapterKeys, type ContentKey, type JourneyChapterKey } from '@karar-hali/shared'
 
 /*
  * İçerik düzenleyicinin alan yapılandırması.
@@ -7,7 +7,16 @@ import type { ContentKey } from '@karar-hali/shared'
  */
 
 export type FieldType =
-  'text' | 'textarea' | 'image' | 'stringList' | 'imageList' | 'items' | 'stats'
+  | 'text'
+  | 'textarea'
+  | 'image'
+  | 'stringList'
+  | 'imageList'
+  | 'items'
+  | 'stats'
+  | 'slides'
+  /** Alan değil, bölüm başlığı (uzun formları gruplamak için) */
+  | 'divider'
 
 export interface FieldDef {
   name: string
@@ -39,10 +48,73 @@ const heading: FieldDef[] = [
   },
 ]
 
+const chapterNames: Record<JourneyChapterKey, string> = {
+  creel: 'İplik',
+  warp: 'Tezgâh hazırlığı',
+  weaving: 'Dokuma',
+  shearing: 'Tıraş ve apre',
+  binding: 'Konfeksiyon',
+  quality: 'Kalite kontrol',
+  packing: 'Paketleme',
+  shipping: 'Sevkiyat',
+}
+
+const journeyChapterFields: FieldDef[] = journeyChapterKeys.flatMap((key, index) => [
+  {
+    name: `chapters.${key}`,
+    label: `${index + 1}. bölüm · ${chapterNames[key]}`,
+    type: 'divider' as const,
+    hint: 'Sahnenin animasyonu sabittir; buradan metinleri düzenlersiniz.',
+  },
+  {
+    name: `chapters.${key}.label`,
+    label: 'Kısa ad',
+    type: 'text' as const,
+    hint: 'İlerleme çubuğunda görünür (en fazla 40 karakter)',
+  },
+  { name: `chapters.${key}.fact`, label: 'Öne çıkan bilgi', type: 'text' as const },
+  { name: `chapters.${key}.title`, label: 'Başlık', type: 'text' as const },
+  { name: `chapters.${key}.text`, label: 'Metin', type: 'textarea' as const },
+])
+
 export const blockDefs: Record<ContentKey, BlockDef> = {
+  'home.journey': {
+    title: 'Üretim yolculuğu',
+    description:
+      'Ana sayfanın girişi: ilk iplikten sevkiyata, kaydırdıkça ilerleyen 8 bölümlük üretim hikâyesi ve kapanış başlığı.',
+    group: 'Ana sayfa',
+    sitePath: '/tr',
+    fields: [
+      { name: 'giris', label: 'Giriş', type: 'divider' },
+      ...heading,
+      { name: 'text', label: 'Giriş metni', type: 'textarea' },
+      {
+        name: 'scrollCue',
+        label: 'Kaydırma ipucu',
+        type: 'text',
+        hint: 'Girişin altındaki kısa yazı',
+      },
+      ...journeyChapterFields,
+      {
+        name: 'final',
+        label: 'Kapanış',
+        type: 'divider',
+        hint: 'Hikâyenin ardından, slaytlardan önce',
+      },
+      { name: 'finaleEyebrow', label: 'Üst başlık', type: 'text' },
+      { name: 'finaleTitle', label: 'Başlık', type: 'text' },
+      {
+        name: 'finaleTitleAccent',
+        label: 'Vurgulu kısım',
+        type: 'text',
+        hint: 'Başlıkta aynen geçmeli. Boş bırakılabilir.',
+      },
+    ],
+  },
   'home.hero': {
     title: 'Giriş bölümü',
-    description: 'Ana sayfanın en üstündeki büyük başlık, metin ve görsel.',
+    description:
+      'Sekme başlığı ve arama motorları için ana sayfa başlığı ile slaytlardaki butonlar. Slayt görselleri "Evinizde slaytları", giriş "Üretim yolculuğu" bölümündedir.',
     group: 'Ana sayfa',
     sitePath: '/tr',
     fields: [
@@ -56,6 +128,21 @@ export const blockDefs: Record<ContentKey, BlockDef> = {
         label: 'Görsel açıklaması',
         type: 'text',
         hint: 'Ekran okuyucular ve arama motorları için',
+      },
+    ],
+  },
+  'home.slides': {
+    title: 'Evinizde slaytları',
+    description:
+      'Üretim hikâyesinin ardından, halıların mekânlarda göründüğü otomatik geçen büyük görseller ve metinleri.',
+    group: 'Ana sayfa',
+    sitePath: '/tr',
+    fields: [
+      {
+        name: 'items',
+        label: 'Slaytlar',
+        type: 'slides',
+        hint: 'En az 1, en fazla 8 slayt. Sıra sitedeki gösterim sırasıdır. Geniş (yatay) ve yüksek çözünürlüklü görseller kullanın.',
       },
     ],
   },
@@ -206,11 +293,18 @@ export const blockDefs: Record<ContentKey, BlockDef> = {
 
 /** Yeni (henüz kaydı olmayan) blok için boş değerler */
 export function emptyBlock(def: BlockDef) {
-  const locale = Object.fromEntries(
-    def.fields.map((field) => [
-      field.name,
-      field.type === 'text' || field.type === 'textarea' || field.type === 'image' ? '' : [],
-    ]),
-  )
+  const locale: Record<string, unknown> = {}
+  for (const field of def.fields) {
+    if (field.type === 'divider') continue
+    const empty = ['text', 'textarea', 'image'].includes(field.type) ? '' : []
+    // "chapters.creel.title" gibi iç içe adlar nesne olarak kurulur
+    const parts = field.name.split('.')
+    let node = locale
+    for (const part of parts.slice(0, -1)) {
+      node[part] ??= {}
+      node = node[part] as Record<string, unknown>
+    }
+    node[parts.at(-1)!] = empty
+  }
   return { tr: locale, en: structuredClone(locale) }
 }

@@ -17,7 +17,11 @@ export function SiteHeader() {
   const close = () => setOpen(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line/60 bg-canvas/80 backdrop-blur-xl">
+    // Sayfa geçişlerinde menü yerinde kalır (globals.css → site-header)
+    <header
+      style={{ viewTransitionName: 'site-header' }}
+      className="sticky top-0 z-50 border-b border-line/60 bg-canvas/80 backdrop-blur-xl"
+    >
       <Container className="flex h-18 items-center justify-between gap-4">
         <Link
           to={path('home')}

@@ -1,6 +1,9 @@
 import '@testing-library/jest-dom/vitest'
-import { cleanup } from '@testing-library/react'
+import { cleanup, configure } from '@testing-library/react'
 import { installTestApi } from './api'
+
+// Sayfalar lazy yüklenir; makine yoğunken (paralel turbo / CI) ilk yükleme 1 sn'lik varsayılan bekleme süresini aşabilir.
+configure({ asyncUtilTimeout: 5000 })
 
 // jsdom'da olmayan tarayıcı API'leri (Radix ve sonner kullanıyor)
 window.scrollTo = vi.fn() as unknown as typeof window.scrollTo

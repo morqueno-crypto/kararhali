@@ -5,8 +5,142 @@ const IMG = 'https://www.kararhali.com/assets/img'
 
 type SeedContent = { [K in ContentKey]: ContentBlock<K> }
 
+/** Unsplash görselleri (Unsplash lisansı: ücretsiz kullanım). Panelden değiştirilebilir. */
+const unsplash = (id: string) =>
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=2000&q=75`
+
+const slideImages = {
+  livingRoom: unsplash('1617103996702-96ff29b1c467'),
+  classic: unsplash('1652634213812-f0deeb1de78e'),
+  loom: unsplash('1638310533874-6c124c012e1d'),
+  pattern: unsplash('1710924447533-7177c52b3da3'),
+  yarn: unsplash('1569909115134-a0426936c879'),
+}
+
 // Sitedeki mevcut TR/EN metinler. Kurumsal metinler kararhali.com/hakkimizda sayfasından uyarlanmıştır.
 export const contentSeed: SeedContent = {
+  'home.journey': {
+    tr: {
+      eyebrow: 'Gaziantep’ten evinize',
+      title: 'Bir halının yolculuğu',
+      titleAccent: 'yolculuğu',
+      text: 'İlk iplikten evinize serilen halıya kadar her adım tezgâhlarımızda, ustalarımızın elinde şekillenir. Kaydırın, birlikte dokuyalım.',
+      scrollCue: 'Kaydırarak keşfedin',
+      chapters: {
+        creel: {
+          label: 'İplik',
+          title: 'Her şey bir iple başlar',
+          text: 'Desendeki her renk için iplik bobinleri hazırlanır ve tezgâhın cağına dizilir. Binlerce iplik ucu aynı anda tezgâha doğru yola çıkar.',
+          fact: 'Her renk için ayrı bir iplik',
+        },
+        warp: {
+          label: 'Tezgâh',
+          title: 'Desen tezgâha işlenir',
+          text: 'Çözgü iplikleri tezgâh boyunca gerilir, tasarım jakar makinesine aktarılır. Jakar hangi ipliğin ne zaman kalkacağını ilmek ilmek bilir.',
+          fact: 'Her ilmek önceden programlanır',
+        },
+        weaving: {
+          label: 'Dokuma',
+          title: 'İlmek ilmek dokunur',
+          text: 'Atkı ipliği çözgülerin arasından geçer; her sırada desen biraz daha büyür. Motifler ve renkler halının yüzeyinde yavaş yavaş belirir.',
+          fact: 'Sıra sıra, renk renk',
+        },
+        shearing: {
+          label: 'Tıraş ve apre',
+          title: 'Yüzey kusursuzlaşır',
+          text: 'Tezgâhtan çıkan halının havı tıraşlanarak eşitlenir, arka yüzü apreyle sağlamlaştırılır. Desen netleşir, renkler canlanır.',
+          fact: 'Eşit hav, net desen',
+        },
+        binding: {
+          label: 'Konfeksiyon',
+          title: 'İnce overlok, beyaz saçak',
+          text: 'Halının uzun kenarlarına ince bir overlok dikilir, kısa kenarlarına kısa beyaz saçaklar tek tek takılır. Zarif bir işçilikle son hâline kavuşur.',
+          fact: 'El işi inceliğinde bitim',
+        },
+        quality: {
+          label: 'Kalite kontrol',
+          title: 'Her halı tek tek incelenir',
+          text: 'Ölçü, renk, desen ve dikişler kontrol edilir. Onay almayan hiçbir halı sevkiyata çıkmaz.',
+          fact: 'Ölçü · renk · desen · dikiş',
+        },
+        packing: {
+          label: 'Paketleme',
+          title: 'Özenle sarılır',
+          text: 'Halı rulo hâline getirilir, koruyucu ambalajla sarılır ve etiketlenir. Yolculuk boyunca tozdan ve nemden korunur.',
+          fact: 'Rulo · ambalaj · etiket',
+        },
+        shipping: {
+          label: 'Sevkiyat',
+          title: 'Ve yola çıkar',
+          text: 'Paketlenen halılar Türkiye’nin dört bir yanındaki bayilerimize ve yurt dışındaki müşterilerimize gönderilir.',
+          fact: 'Gaziantep’ten dünyaya',
+        },
+      },
+      finaleEyebrow: 'Yolculuğun sonu',
+      finaleTitle: 'Ve sonunda evinizde.',
+      finaleTitleAccent: 'evinizde.',
+    },
+    en: {
+      eyebrow: 'From Gaziantep to your home',
+      title: 'The journey of a carpet',
+      titleAccent: 'journey',
+      text: 'From the first thread to the carpet laid in your home, every step takes shape on our looms, in the hands of our craftspeople. Scroll, and let’s weave together.',
+      scrollCue: 'Scroll to explore',
+      chapters: {
+        creel: {
+          label: 'Yarn',
+          title: 'It all starts with a thread',
+          text: 'For every colour in the design, yarn bobbins are prepared and lined up on the loom’s creel. Thousands of yarn ends set off towards the loom at once.',
+          fact: 'A yarn for every colour',
+        },
+        warp: {
+          label: 'Loom',
+          title: 'The design meets the loom',
+          text: 'Warp yarns are stretched along the loom and the design is loaded into the jacquard. The jacquard knows which yarn lifts when, knot by knot.',
+          fact: 'Every knot is programmed',
+        },
+        weaving: {
+          label: 'Weaving',
+          title: 'Woven knot by knot',
+          text: 'The weft passes between the warp yarns and the pattern grows with every row. Motifs and colours slowly appear on the surface.',
+          fact: 'Row by row, colour by colour',
+        },
+        shearing: {
+          label: 'Shearing',
+          title: 'A flawless surface',
+          text: 'Fresh off the loom, the pile is sheared to an even height and the back is strengthened with finishing. The pattern sharpens, the colours come alive.',
+          fact: 'Even pile, crisp pattern',
+        },
+        binding: {
+          label: 'Finishing',
+          title: 'Fine binding, white fringe',
+          text: 'A fine overlock is sewn along the long edges and short white fringes are attached to the short ends, one by one. Finished with delicate craftsmanship.',
+          fact: 'Hand-finish quality',
+        },
+        quality: {
+          label: 'Quality',
+          title: 'Every carpet is inspected',
+          text: 'Size, colour, pattern and stitching are checked. No carpet leaves without approval.',
+          fact: 'Size · colour · pattern · stitch',
+        },
+        packing: {
+          label: 'Packing',
+          title: 'Wrapped with care',
+          text: 'The carpet is rolled, wrapped in protective packaging and labelled, protected from dust and moisture along the way.',
+          fact: 'Roll · wrap · label',
+        },
+        shipping: {
+          label: 'Shipping',
+          title: 'And off it goes',
+          text: 'Packed carpets are shipped to our dealers across Türkiye and to our customers abroad.',
+          fact: 'From Gaziantep to the world',
+        },
+      },
+      finaleEyebrow: 'The journey’s end',
+      finaleTitle: 'And finally, in your home.',
+      finaleTitleAccent: 'your home.',
+    },
+  },
   'home.hero': {
     tr: {
       eyebrow: 'Gaziantep · 1966’dan beri',
@@ -27,6 +161,96 @@ export const contentSeed: SeedContent = {
       secondaryCta: 'Our story',
       image: `${IMG}/project/koleksiyonlar.jpg`,
       imageAlt: 'A living room featuring a Karar Halı carpet',
+    },
+  },
+  'home.slides': {
+    tr: {
+      items: [
+        {
+          image: slideImages.livingRoom,
+          imageAlt: 'Desenli halı serilmiş aydınlık bir oturma odası',
+          eyebrow: 'Gaziantep · 1966’dan beri',
+          title: 'Kararsız kalmayın.',
+          titleAccent: 'kalmayın.',
+          text: 'Doğru seçilmiş bir halı evin havasını tamamen değiştirir. Modern, şık ve ihtişamlı koleksiyonlarımızla her mekâna uygun bir halı üretiyoruz.',
+        },
+        {
+          image: slideImages.classic,
+          imageAlt: 'Kırmızı zeminli, madalyon desenli klasik halı',
+          eyebrow: 'Klasik koleksiyonlar',
+          title: 'Nesilden nesile ihtişam.',
+          titleAccent: 'ihtişam.',
+          text: 'Madalyon ve çiçek motifleriyle zamansız klasikler: canlı renkler, sık dokuma, uzun ömür.',
+        },
+        {
+          image: slideImages.loom,
+          imageAlt: 'Tezgâhta halı dokuyan bir usta',
+          eyebrow: 'Zanaat',
+          title: 'Her ilmekte emek var.',
+          titleAccent: 'emek',
+          text: 'Yılların tecrübesini modern üretim teknolojisiyle buluşturuyor, her halıyı titizlikle üretiyoruz.',
+        },
+        {
+          image: slideImages.pattern,
+          imageAlt: 'Canlı renkli, geleneksel desenli halı yakın çekim',
+          eyebrow: 'Renk ve desen',
+          title: 'Renklerin dili halıda.',
+          titleAccent: 'Renklerin',
+          text: 'Geleneksel motiflerden modern geometrilere, her zevke uygun yüzlerce model.',
+        },
+        {
+          image: slideImages.yarn,
+          imageAlt: 'Dokuma tezgâhında rengârenk iplikler',
+          eyebrow: 'Üretim',
+          title: 'İplikten salonunuza.',
+          titleAccent: 'salonunuza.',
+          text: 'İplik seçiminden kesime kadar her aşamada kalite kontrolüyle üretiyor, halınızı özenle teslim ediyoruz.',
+        },
+      ],
+    },
+    en: {
+      items: [
+        {
+          image: slideImages.livingRoom,
+          imageAlt: 'A bright living room with a patterned carpet',
+          eyebrow: 'Gaziantep · Since 1966',
+          title: 'Decide with confidence.',
+          titleAccent: 'confidence.',
+          text: 'The right carpet completely changes the feel of a home. With our modern, elegant and grand collections, we make a carpet for every space.',
+        },
+        {
+          image: slideImages.classic,
+          imageAlt: 'A classic red carpet with a medallion pattern',
+          eyebrow: 'Classic collections',
+          title: 'Grandeur for generations.',
+          titleAccent: 'Grandeur',
+          text: 'Timeless classics with medallion and floral motifs: vivid colours, dense weave, lasting quality.',
+        },
+        {
+          image: slideImages.loom,
+          imageAlt: 'A craftswoman weaving a carpet on a loom',
+          eyebrow: 'Craft',
+          title: 'Care in every knot.',
+          titleAccent: 'Care',
+          text: 'We bring years of experience together with modern production technology and make every carpet with care.',
+        },
+        {
+          image: slideImages.pattern,
+          imageAlt: 'Close-up of a vividly coloured traditional carpet',
+          eyebrow: 'Colour & pattern',
+          title: 'Colour speaks through carpet.',
+          titleAccent: 'Colour',
+          text: 'From traditional motifs to modern geometry: hundreds of designs for every taste.',
+        },
+        {
+          image: slideImages.yarn,
+          imageAlt: 'Colourful yarn on a weaving loom',
+          eyebrow: 'Production',
+          title: 'From yarn to your living room.',
+          titleAccent: 'living room.',
+          text: 'From yarn selection to cutting, every step is quality-checked, and your carpet is delivered with care.',
+        },
+      ],
     },
   },
   'home.featured': {

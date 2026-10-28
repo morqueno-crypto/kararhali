@@ -26,6 +26,13 @@ export function RemoteImage({ className, alt, src, loading = 'lazy', ...props }:
 
   return (
     <img
+      // Önbellekteki görsel takıldığı anda hazırdır: beklemeden görünür yap. Aksi halde sayfa geçişinde
+      // (view transition) yeni görünümün anlık görüntüsü görsel saydamken alınır ve "morph" boşluğa büyür.
+      ref={(node) => {
+        if (status === 'loading' && node?.complete && node.naturalWidth > 0) {
+          setResult({ src, status: 'loaded' })
+        }
+      }}
       src={src}
       alt={alt}
       loading={loading}

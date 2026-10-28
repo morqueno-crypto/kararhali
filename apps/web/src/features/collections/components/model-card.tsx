@@ -1,9 +1,11 @@
+import { ViewTransition } from 'react'
 import { Link } from 'react-router'
 import { RemoteImage } from '@/components/ui/remote-image'
 import { useI18n } from '@/i18n'
 import { cn } from '@/lib/cn'
 import { useTilt } from '@/lib/motion/pointer-effects'
 import type { ProductModel } from '@/types/collection'
+import { modelImageTransition } from '../transition-names'
 
 interface ModelCardProps {
   model: ProductModel
@@ -25,13 +27,20 @@ export function ModelCard({ model, active }: ModelCardProps) {
         active ? 'border-accent' : 'border-line hover:border-ink/30',
       )}
     >
-      <div className="aspect-11/16 overflow-hidden bg-paper p-4">
-        <RemoteImage
-          src={model.image}
-          alt={t.modelDetail.imageAlt(model.code, model.color)}
-          className="size-full object-contain transition-transform duration-700 ease-(--ease-out-expo) group-hover:scale-[1.06]"
-        />
-      </div>
+      {/* Model detayına geçişte görsel büyüyerek detaydaki ana görsele dönüşür */}
+      <ViewTransition
+        name={modelImageTransition(model.collectionSlug, model.slug)}
+        share="morph"
+        default="none"
+      >
+        <div className="aspect-11/16 overflow-hidden bg-paper p-4">
+          <RemoteImage
+            src={model.image}
+            alt={t.modelDetail.imageAlt(model.code, model.color)}
+            className="size-full object-contain transition-transform duration-700 ease-(--ease-out-expo) group-hover:scale-[1.06]"
+          />
+        </div>
+      </ViewTransition>
       <div className="flex items-center justify-between gap-3 px-4 py-3">
         <span className="font-display text-base font-semibold text-ink tabular-nums transition-colors group-hover:text-accent">
           {model.code}

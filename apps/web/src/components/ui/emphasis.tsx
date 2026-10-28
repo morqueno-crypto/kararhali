@@ -37,7 +37,10 @@ export function AccentWord({ children, className }: { children: string; classNam
       data-drawn={drawn ? '' : undefined}
       className={cn('relative inline-block whitespace-nowrap text-accent', className)}
     >
-      {children}
+      {/* Altından kiremide degrade yazı; alttaki iplik çizgisi currentColor (altın) kullanır */}
+      <span className="bg-linear-to-r from-accent via-accent-strong to-accent-2 bg-clip-text text-transparent">
+        {children}
+      </span>
       <svg
         aria-hidden="true"
         viewBox="0 0 300 20"

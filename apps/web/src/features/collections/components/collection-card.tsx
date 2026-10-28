@@ -1,10 +1,12 @@
 import { ArrowUpRight } from 'lucide-react'
+import { ViewTransition } from 'react'
 import { Link } from 'react-router'
 import { RemoteImage } from '@/components/ui/remote-image'
 import { useI18n } from '@/i18n'
 import { cn } from '@/lib/cn'
 import { useTilt } from '@/lib/motion/pointer-effects'
 import type { Collection } from '@/types/collection'
+import { collectionImageTransition } from '../transition-names'
 
 interface CollectionCardProps {
   collection: Collection
@@ -25,14 +27,23 @@ export function CollectionCard({ collection, className }: CollectionCardProps) {
         className,
       )}
     >
-      {/* Parallax katmanı: kaydırma animasyonları bu sarmalayıcıyı hareket ettirir */}
-      <div data-parallax className="absolute -inset-x-[8%] inset-y-0 -z-20">
-        <RemoteImage
-          src={collection.cover}
-          alt={collection.name}
-          className="size-full object-cover transition-transform duration-[1.2s] ease-(--ease-out-expo) group-hover:scale-110"
-        />
-      </div>
+      {/* Detay sayfasına geçişte bu görsel kutusu sayfanın üst görseline dönüşür (shared element) */}
+      <ViewTransition
+        name={collectionImageTransition(collection.slug)}
+        share="morph"
+        default="none"
+      >
+        <div className="absolute inset-0 -z-20 overflow-hidden">
+          {/* Parallax katmanı: kaydırma animasyonları bu sarmalayıcıyı hareket ettirir */}
+          <div data-parallax className="absolute -inset-x-[8%] inset-y-0">
+            <RemoteImage
+              src={collection.cover}
+              alt={collection.name}
+              className="size-full object-cover transition-transform duration-[1.2s] ease-(--ease-out-expo) group-hover:scale-110"
+            />
+          </div>
+        </div>
+      </ViewTransition>
       <div
         className="absolute inset-0 -z-10 bg-linear-to-t from-canvas via-canvas/40 to-transparent transition-opacity duration-500 group-hover:opacity-90"
         aria-hidden="true"

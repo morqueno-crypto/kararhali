@@ -30,6 +30,7 @@ import { PageHeader } from '@/components/ui/page-header'
 import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs'
 import { Thumb } from '@/components/ui/thumb'
 import { ImageField, MediaPicker } from '@/features/media'
+import { cn } from '@/lib/cn'
 import { env } from '@/lib/env'
 import { applyApiErrors } from '@/lib/form-errors'
 import { formatDateTime } from '@/lib/format'
@@ -220,7 +221,15 @@ function getError(errors: FieldErrors, path: string): string | undefined {
   return typeof message === 'string' ? message : undefined
 }
 
-const wide: FieldDef['type'][] = ['textarea', 'image', 'stringList', 'imageList', 'items', 'stats']
+const wide: FieldDef['type'][] = [
+  'textarea',
+  'image',
+  'stringList',
+  'imageList',
+  'items',
+  'stats',
+  'slides',
+]
 
 function FieldControl({
   form,
@@ -251,6 +260,13 @@ function FieldControl({
   }
 
   switch (def.type) {
+    case 'divider':
+      return (
+        <div className="border-t border-line pt-5 md:col-span-2 [&:first-child]:border-0 [&:first-child]:pt-0">
+          <h3 className="text-sm font-bold text-ink">{def.label}</h3>
+          {def.hint && <p className="mt-0.5 text-xs text-subtle">{def.hint}</p>}
+        </div>
+      )
     case 'text':
       return (
         <Field label={def.label} hint={def.hint} error={error} className={className}>
@@ -406,23 +422,138 @@ function FieldControl({
           )}
         />
       )
+    case 'slides':
+      return (
+        <Controller
+          control={control}
+          name={path}
+          render={({ field }) => (
+            <ListShell label={def.label} hint={def.hint} error={error} className={className}>
+              <ListEditor
+                value={(field.value as Slide[]) ?? []}
+                onChange={(next) => {
+                  syncSlideImages(field.value as Slide[], next)
+                  field.onChange(next)
+                }}
+                create={() => ({ ...emptySlide })}
+                addLabel="Slayt ekle"
+                renderItem={(item, index, update) => {
+                  const fieldError = (name: keyof Slide) =>
+                    !!getError(errors, `${path}.${index}.${name}`)
+                  return (
+                    <div className="grid gap-3 lg:grid-cols-[16rem_1fr]">
+                      <div className="min-w-0 space-y-2">
+                        <ImageField
+                          value={item.image}
+                          invalid={fieldError('image')}
+                          onChange={(url) => update({ ...item, image: url ?? '' })}
+                          className="flex-col items-stretch [&>div:first-child]:aspect-video [&>div:first-child]:h-auto [&>div:first-child]:w-full"
+                        />
+                        <Input
+                          aria-label={`${index + 1}. slayt görsel açıklaması`}
+                          aria-invalid={fieldError('imageAlt')}
+                          placeholder="Görsel açıklaması"
+                          value={item.imageAlt}
+                          onChange={(event) => update({ ...item, imageAlt: event.target.value })}
+                        />
+                      </div>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        <Input
+                          aria-label={`${index + 1}. slayt üst başlık`}
+                          aria-invalid={fieldError('eyebrow')}
+                          placeholder="Üst başlık"
+                          value={item.eyebrow}
+                          onChange={(event) => update({ ...item, eyebrow: event.target.value })}
+                        />
+                        <Input
+                          aria-label={`${index + 1}. slayt vurgulu kısım`}
+                          aria-invalid={fieldError('titleAccent')}
+                          placeholder="Vurgulu kelime (başlıkta geçmeli)"
+                          value={item.titleAccent}
+                          onChange={(event) => update({ ...item, titleAccent: event.target.value })}
+                        />
+                        <Input
+                          aria-label={`${index + 1}. slayt başlık`}
+                          aria-invalid={fieldError('title')}
+                          placeholder="Başlık"
+                          value={item.title}
+                          onChange={(event) => update({ ...item, title: event.target.value })}
+                          className="font-display font-bold sm:col-span-2"
+                        />
+                        <Textarea
+                          aria-label={`${index + 1}. slayt metin`}
+                          aria-invalid={fieldError('text')}
+                          placeholder="Metin"
+                          rows={3}
+                          value={item.text}
+                          onChange={(event) => update({ ...item, text: event.target.value })}
+                          className="sm:col-span-2"
+                        />
+                      </div>
+                    </div>
+                  )
+                }}
+              />
+            </ListShell>
+          )}
+        />
+      )
   }
+
+  /** Slayt görseli değişince diğer dilde aynı sıradaki görsel de aynıysa birlikte güncellenir. */
+  function syncSlideImages(previous: Slide[] = [], next: Slide[]) {
+    const otherSlides = (getValues(other) as Slide[] | undefined) ?? []
+    if (previous.length !== next.length) return
+    let changed = false
+    const synced = otherSlides.map((slide, index) => {
+      const before = previous[index]?.image
+      const after = next[index]?.image
+      if (before !== after && slide.image === before && after !== undefined) {
+        changed = true
+        return { ...slide, image: after }
+      }
+      return slide
+    })
+    if (changed) setValue(other, synced, { shouldDirty: true })
+  }
+}
+
+interface Slide {
+  image: string
+  imageAlt: string
+  eyebrow: string
+  title: string
+  titleAccent: string
+  text: string
+}
+
+const emptySlide: Slide = {
+  image: '',
+  imageAlt: '',
+  eyebrow: '',
+  title: '',
+  titleAccent: '',
+  text: '',
 }
 
 function ListShell({
   label,
+  hint,
   error,
   className,
   children,
 }: {
   label: string
+  hint?: string
   error?: string
   className?: string
   children: ReactNode
 }) {
   return (
-    <fieldset className={className}>
+    // fieldset varsayılan olarak içeriğinin en geniş hâli kadar daralmaz (min-width: min-content)
+    <fieldset className={cn('min-w-0', className)}>
       <legend className="mb-1.5 text-xs font-semibold text-muted">{label}</legend>
+      {hint && <p className="-mt-1 mb-2 text-xs text-subtle">{hint}</p>}
       {children}
       {error && <p className="text-danger mt-1.5 text-xs">{error}</p>}
     </fieldset>
